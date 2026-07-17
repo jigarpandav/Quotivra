@@ -173,11 +173,11 @@ const Dashboard = () => {
               </div>
 
               <div className="status-list">
-                <p><span className="dot approved"></span> Approved <strong>{stats.approvedQuotations}</strong></p>
-                <p><span className="dot draft"></span> Draft <strong>{stats.draftQuotations}</strong></p>
-                <p><span className="dot rejected"></span> Rejected <strong>{stats.rejectedQuotations}</strong></p>
+                <p><span className="dot approved"></span> Approved: <strong>{stats.approvedQuotations}</strong></p>
+                <p><span className="dot draft"></span> Draft: <strong>{stats.draftQuotations}</strong></p>
+                <p><span className="dot rejected"></span> Rejected: <strong>{stats.rejectedQuotations}</strong></p>
                 {otherQuotations > 0 && (
-                  <p><span className="dot other"></span> Other <strong>{otherQuotations}</strong></p>
+                  <p><span className="dot other"></span> Other: <strong>{otherQuotations}</strong></p>
                 )}
               </div>
             </div>

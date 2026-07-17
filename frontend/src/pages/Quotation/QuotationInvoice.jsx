@@ -148,7 +148,7 @@ const handleDownloadPDF = () => {
 
   const options = {
     margin: 5,
-    filename: `${quotation.customer.person_name || "quotation"}.pdf`,
+    filename: `${quotations.customer_name || "quotation"}.pdf`,
     image: { type: "jpeg", quality: 1 },
     html2canvas: {
       scale: 3,
