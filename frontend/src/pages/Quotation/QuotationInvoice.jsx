@@ -163,7 +163,7 @@ const handleDownloadPDF = () => {
 
 const handleSendWhatsApp = () => {
   const phone = quotation.customer.contact; // 10 digit number
-  const pdfUrl = `${import.meta.env.VITE_LOGO_URL}/api/quotation/pdf/${id}`;
+  const pdfUrl = `${import.meta.env.VITE_PDF_URL}/api/quotation/pdf/${id}`;
 
   const message = `Hello ${quotation.customer.person_name}, your quotation is ready.
 
