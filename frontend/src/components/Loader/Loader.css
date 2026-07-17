@@ -1,0 +1,33 @@
+.loader-container {
+  position: fixed;
+  inset: 0;
+  background: rgba(6, 17, 31, 0.8);
+  backdrop-filter: blur(3px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  z-index: 9999;
+}
+
+.loader-icon {
+  font-size: 40px;
+  color: #2563eb;
+  animation: spin 1s linear infinite;
+}
+
+.loader-container p {
+  font-size: 16px;
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}

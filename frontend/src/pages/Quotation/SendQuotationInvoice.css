@@ -1,0 +1,564 @@
+.view-quotation-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.quotation-sheet {
+  background: #fff;
+  color: #111827;
+  max-width: 900px;
+  margin: auto;
+  padding: 28px;
+  border: 1px solid #9ca3af;
+  font-size: 14px;
+}
+
+.quotation-top {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  gap: 20px;
+  border: 1px solid #9ca3af;
+  border-bottom: none;
+  padding: 18px;
+}
+
+.quotation-logo-box img {
+  width: 95px;
+  height: 95px;
+  object-fit: contain;
+}
+
+.quotation-company-info {
+  text-align: right;
+}
+
+.quotation-company-info h2 {
+  color: #0f3b69;
+  font-size: 26px;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+
+.quotation-section-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border: 1px solid #9ca3af;
+  border-bottom: none;
+}
+
+.quotation-box {
+  border-right: 1px solid #9ca3af;
+}
+
+.quotation-box:last-child {
+  border-right: none;
+}
+
+.quotation-box-title {
+  background: #a3a3a3;
+  color: #111827;
+  font-weight: 800;
+  padding: 6px 10px;
+  border-bottom: 1px solid #9ca3af;
+}
+
+.quotation-box-body {
+  padding: 12px 10px;
+  min-height: 140px;
+}
+
+.quotation-box-body h3 {
+  font-size: 16px;
+  margin-bottom: 12px;
+}
+
+.quotation-box-body p {
+  margin-bottom: 8px;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.quotation-table {
+  border: 1px solid #9ca3af;
+  color: #111827;
+}
+
+.quotation-items-mobile {
+  display: none;
+}
+
+.quotation-table th {
+  background: #a3a3a3;
+  font-weight: 800;
+}
+
+.quotation-table th,
+.quotation-table td {
+  border: 1px solid #9ca3af;
+  padding: 7px;
+}
+
+.quotation-table th:nth-child(1),
+.quotation-table td:nth-child(1) {
+  width: 45px;
+  text-align: center;
+}
+
+.quotation-table th:nth-child(4),
+.quotation-table td:nth-child(4) {
+  text-align: center;
+}
+
+.quotation-table th:nth-child(5),
+.quotation-table td:nth-child(5),
+.quotation-table th:nth-child(6),
+.quotation-table td:nth-child(6) {
+  text-align: right;
+}
+
+.quotation-total-row {
+  font-weight: 800;
+}
+
+.quotation-total-row td {
+  background: #fff;
+}
+
+.quotation-total-row td:nth-child(2) {
+  text-align: right;
+}
+
+.quotation-amount-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-left: 1px solid #9ca3af;
+  border-right: 1px solid #9ca3af;
+  border-bottom: 1px solid #9ca3af;
+}
+
+.quotation-amount-grid > div:first-child {
+  border-right: 1px solid #9ca3af;
+}
+
+.quotation-amount-words {
+  padding: 18px 12px;
+  text-align: center;
+  min-height: 58px;
+}
+
+.quotation-summary-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  border-bottom: 1px solid #9ca3af;
+}
+
+.quotation-summary-row.total {
+  font-weight: 900;
+  border-bottom: none;
+}
+
+.quotation-bottom-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.1fr;
+  border-left: 1px solid #9ca3af;
+  border-right: 1px solid #9ca3af;
+  border-bottom: 1px solid #9ca3af;
+}
+
+.quotation-bottom-grid > div {
+  border-right: 1px solid #9ca3af;
+}
+
+.quotation-bottom-grid > div:last-child {
+  border-right: none;
+}
+
+.quotation-bottom-body {
+  padding: 12px 10px;
+  min-height: 130px;
+}
+
+.quotation-bottom-body p {
+  margin-bottom: 8px;
+}
+
+.quotation-sign-box {
+  min-height: 160px;
+  padding: 28px 40px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.quotation-sign-box p{
+    margin-top: 0 !important;
+
+}
+ .quotation-sign-box .signature{
+    margin-top: 2.5rem !important;
+    font-size: 2rem;
+    font-weight: 500;
+    font-family: 'Brush Script MT', cursive;
+ }
+
+ .quotation-sign-box strong {
+    display:block;
+    margin-top: 12px;
+    border-top: 1px solid #0f3b69 ;
+    justify-content: center;
+    align-items: center;
+    padding-top: 4px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .view-quotation-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .invoice-action-buttons {
+    width: 100%;
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px !important;
+  }
+
+  .invoice-action-buttons button {
+    width: 100% !important;
+    min-width: 0;
+    padding-inline: 12px !important;
+  }
+
+  .quotation-sheet {
+    padding: 16px;
+    overflow: hidden;
+  }
+
+  .quotation-top {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .quotation-logo-box img {
+    margin: auto;
+  }
+
+  .quotation-company-info {
+    text-align: center;
+  }
+
+  .quotation-section-grid,
+  .quotation-amount-grid,
+  .quotation-bottom-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .quotation-box,
+  .quotation-amount-grid > div:first-child,
+  .quotation-bottom-grid > div {
+    border-right: none;
+  }
+
+  .quotation-bottom-grid > div {
+    border-bottom: 1px solid #9ca3af;
+  }
+
+  .quotation-bottom-grid > div:last-child {
+    border-bottom: none;
+  }
+}
+
+@media (max-width: 576px) {
+  .view-quotation-page {
+    padding: 18px 0;
+  }
+
+  .view-quotation-actions {
+    gap: 16px;
+    margin-bottom: 18px;
+  }
+
+  .view-quotation-actions .page-subtitle {
+    margin-bottom: 0;
+  }
+
+  .invoice-action-buttons {
+    grid-template-columns: 1fr;
+  }
+
+  .quotation-sheet {
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 13px;
+  }
+
+  .quotation-top {
+    gap: 12px;
+    padding: 14px;
+  }
+
+  .quotation-logo-box img {
+    width: 78px;
+    height: 78px;
+  }
+
+  .quotation-company-info h2 {
+    font-size: 20px;
+    line-height: 1.25;
+  }
+
+  .quotation-company-info p,
+  .quotation-box-body p,
+  .quotation-bottom-body p {
+    overflow-wrap: anywhere;
+  }
+
+  .quotation-box-body,
+  .quotation-bottom-body {
+    min-height: auto;
+    padding: 12px;
+  }
+
+  .quotation-box.text-right {
+    text-align: left;
+  }
+
+  .quotation-sheet .table-responsive {
+    display: none;
+  }
+
+  .quotation-items-mobile {
+    display: grid;
+    gap: 10px;
+    padding: 12px;
+    border: 1px solid #9ca3af;
+    border-bottom: none;
+  }
+
+  .quotation-item-card {
+    padding: 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    background: #f9fafb;
+  }
+
+  .quotation-item-card-header,
+  .quotation-item-total-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .quotation-item-card-header span,
+  .quotation-item-card-grid span,
+  .quotation-item-total-card span {
+    display: block;
+    color: #6b7280;
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  .quotation-item-card-header strong,
+  .quotation-item-total-card strong {
+    color: #0f3b69;
+  }
+
+  .quotation-item-card h3 {
+    margin: 10px 0;
+    color: #111827;
+    font-size: 14px;
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+  }
+
+  .quotation-item-card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .quotation-item-card-grid strong {
+    display: block;
+    margin-top: 3px;
+  }
+
+  .quotation-item-total-card {
+    background: #eff6ff;
+    border-color: #bfdbfe;
+  }
+
+  .quotation-amount-grid {
+    border-top: none;
+  }
+
+  .quotation-amount-words {
+    min-height: auto;
+    padding: 14px 12px;
+    text-align: left;
+    overflow-wrap: anywhere;
+  }
+
+  .quotation-summary-row {
+    gap: 12px;
+  }
+
+  .quotation-sign-box {
+    min-height: 140px;
+    padding: 18px 16px;
+  }
+
+  .quotation-sign-box .signature {
+    margin-top: 1.5rem !important;
+    font-size: 1.6rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .quotation-item-card-header,
+  .quotation-item-total-card,
+  .quotation-item-card-grid {
+    grid-template-columns: 1fr;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 8mm;
+  }
+
+  * {
+    box-sizing: border-box;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  body {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: white !important;
+  }
+
+  #quotation-pdf {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 1px solid #9ca3af !important;
+    box-shadow: none !important;
+    background: #fff !important;
+    color: #111827 !important;
+  }
+
+  .quotation-top {
+    padding: 14px !important;
+  }
+
+  .quotation-logo-box img {
+    width: 75px !important;
+    height: auto !important;
+  }
+
+  .quotation-company-info h2 {
+    font-size: 20px !important;
+    margin: 6px 0 !important;
+  }
+
+  .quotation-company-info p {
+    font-size: 10px !important;
+    margin: 2px 0 !important;
+  }
+
+  .quotation-box-title {
+    background: #b5b5b5 !important;
+    color: #111827 !important;
+    padding: 7px !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+  }
+
+  .quotation-box-body,
+  .quotation-bottom-body {
+    padding: 10px !important;
+    min-height: auto !important;
+  }
+
+  .quotation-box-body p,
+  .quotation-bottom-body p {
+    font-size: 10px !important;
+    margin: 5px 0 !important;
+  }
+
+  .quotation-table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+  }
+
+  .quotation-sheet .table-responsive {
+    display: block !important;
+  }
+
+  .quotation-items-mobile {
+    display: none !important;
+  }
+
+  .quotation-table th,
+  .quotation-table td {
+    border: 1px solid #9ca3af !important;
+    padding: 6px !important;
+    font-size: 10px !important;
+  }
+
+  .quotation-table th {
+    background: #b5b5b5 !important;
+    color: #111827 !important;
+  }
+
+  .quotation-amount-grid,
+  .quotation-bottom-grid {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 0 !important;
+  }
+
+  .quotation-summary-row {
+    padding: 8px !important;
+    font-size: 10px !important;
+  }
+
+  .quotation-amount-words {
+    padding: 10px !important;
+    font-size: 10px !important;
+  }
+
+  .quotation-sign-box {
+    padding: 12px !important;
+    min-height: 90px !important;
+  }
+
+  .signature {
+    font-size: 24px !important;
+    margin: 8px 0 !important;
+  }
+
+  .quotation-top,
+  .quotation-section-grid,
+  .quotation-table,
+  .quotation-amount-grid,
+  .quotation-bottom-grid,
+  tr {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+}

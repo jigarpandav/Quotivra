@@ -1,0 +1,178 @@
+/* ===================================
+   RESPONSIVE.CSS
+   Desktop, Laptop, Tablet, Mobile
+=================================== */
+
+/* Large Desktop */
+@media (min-width: 1440px) {
+  .container {
+    max-width: 1320px;
+  }
+
+  .page {
+    padding: 40px 0;
+  }
+}
+
+/* Desktop / Laptop */
+@media (max-width: 1200px) {
+  .container {
+    max-width: 1100px;
+    padding-inline: 22px;
+  }
+
+  .page-title {
+    font-size: 30px;
+  }
+}
+
+/* Small Laptop */
+@media (max-width: 1024px) {
+  :root {
+    --section-padding: 20px;
+  }
+
+  .container {
+    padding-inline: 20px;
+  }
+
+  .page {
+    padding: 28px 0;
+  }
+
+  .page-title {
+    font-size: 28px;
+  }
+
+  .card {
+    border-radius: var(--radius-md);
+  }
+}
+
+/* Tablet Landscape */
+@media (max-width: 992px) and (orientation: landscape) {
+  .container {
+    padding-inline: 18px;
+  }
+
+  .page {
+    padding: 24px 0;
+  }
+
+  .btn {
+    padding: 11px 18px;
+  }
+}
+
+/* Tablet Portrait */
+@media (max-width: 768px) {
+  :root {
+    --navbar-height: 64px;
+  }
+
+  .container {
+    padding-inline: 16px;
+  }
+
+  .page {
+    padding: 22px 0;
+  }
+
+  .page-title {
+    font-size: 26px;
+  }
+
+  .page-subtitle {
+    font-size: 14px;
+    margin-bottom: 22px;
+  }
+
+  .btn {
+    width: 100%;
+    padding: 12px 16px;
+  }
+
+  input,
+  textarea,
+  select {
+    font-size: 14px;
+  }
+
+  table {
+    min-width: 720px;
+  }
+
+  .table-responsive {
+    width: 100%;
+    overflow-x: auto;
+  }
+}
+
+/* Mobile Landscape */
+@media (max-width: 640px) and (orientation: landscape) {
+  .page {
+    padding: 18px 0;
+  }
+
+  .page-title {
+    font-size: 24px;
+  }
+
+  .card {
+    border-radius: var(--radius-md);
+  }
+}
+
+/* Mobile Portrait */
+@media (max-width: 576px) {
+  :root {
+    --navbar-height: 60px;
+    --section-padding: 16px;
+  }
+
+  .container {
+    padding-inline: 14px;
+  }
+
+  .page {
+    padding: 18px 0;
+  }
+
+  .page-title {
+    font-size: 24px;
+    line-height: 1.25;
+  }
+
+  .page-subtitle {
+    font-size: 13px;
+  }
+
+  .card {
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .btn {
+    min-height: 44px;
+    font-size: 14px;
+  }
+
+  .form-group {
+    margin-bottom: 16px;
+  }
+}
+
+/* Small Mobile */
+@media (max-width: 420px) {
+  .container {
+    padding-inline: 12px;
+  }
+
+  .page-title {
+    font-size: 22px;
+  }
+
+  .btn {
+    padding: 11px 14px;
+  }
+}

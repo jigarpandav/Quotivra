@@ -1,0 +1,324 @@
+/* ===================================
+   GOOGLE FONT
+=================================== */
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+
+/* ===================================
+   RESET
+=================================== */
+
+*,
+*::before,
+*::after{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+/* ===================================
+   HTML
+=================================== */
+
+html{
+    scroll-behavior:smooth;
+}
+
+/* ===================================
+   BODY
+=================================== */
+
+body{
+    font-family:var(--font-family);
+    background:var(--bg-main);
+    color:var(--text-primary);
+    font-size:var(--font-md);
+    line-height:1.6;
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+}
+
+/* ===================================
+   ROOT
+=================================== */
+
+#root{
+    min-height:100vh;
+}
+
+/* ===================================
+   IMAGES
+=================================== */
+
+img{
+    display:block;
+    max-width:100%;
+    user-select:none;
+}
+
+/* ===================================
+   LINKS
+=================================== */
+
+a{
+    color:inherit;
+    text-decoration:none;
+}
+
+/* ===================================
+   LIST
+=================================== */
+
+ul,
+ol{
+    list-style:none;
+}
+
+/* ===================================
+   BUTTON
+=================================== */
+
+button{
+    border:none;
+    outline:none;
+    cursor:pointer;
+    background:none;
+    color:inherit;
+    font-family:inherit;
+    transition:var(--transition);
+}
+
+/* ===================================
+   INPUTS
+=================================== */
+
+input,
+textarea,
+select{
+    width:100%;
+    outline:none;
+    border:none;
+    background:var(--bg-input);
+    color:var(--text-primary);
+    font-family:inherit;
+    font-size:var(--font-sm);
+    border:1px solid var(--border);
+    border-radius:var(--radius-md);
+    transition:var(--transition);
+}
+
+input:focus,
+textarea:focus,
+select:focus{
+    border-color:var(--primary);
+    box-shadow:0 0 0 3px var(--primary-soft);
+}
+
+textarea{
+    resize:vertical;
+}
+
+/* ===================================
+   PLACEHOLDER
+=================================== */
+
+::placeholder{
+    color:var(--text-muted);
+}
+
+/* ===================================
+   TABLE
+=================================== */
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+.table-responsive{
+    width:100%;
+    max-width:100%;
+    display:block;
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+}
+
+th,
+td{
+    text-align:left;
+}
+
+/* ===================================
+   SCROLLBAR
+=================================== */
+
+::-webkit-scrollbar{
+    width:8px;
+    height:8px;
+}
+
+::-webkit-scrollbar-track{
+    background:var(--bg-soft);
+}
+
+::-webkit-scrollbar-thumb{
+    background:var(--border);
+    border-radius:100px;
+}
+
+::-webkit-scrollbar-thumb:hover{
+    background:var(--primary);
+}
+
+/* Firefox */
+
+*{
+    scrollbar-width:thin;
+    scrollbar-color:var(--border) var(--bg-soft);
+}
+
+/* ===================================
+   CONTAINER
+=================================== */
+
+.container{
+    width:100%;
+    max-width:var(--container-width);
+    margin:auto;
+    padding-inline:24px;
+}
+
+/* ===================================
+   PAGE
+=================================== */
+
+.page{
+    width:100%;
+    padding:32px 0;
+}
+
+/* ===================================
+   CARD
+=================================== */
+
+.card{
+    background:var(--bg-card);
+    border:1px solid var(--border);
+    border-radius:var(--radius-lg);
+    box-shadow:var(--shadow-sm);
+}
+
+/* ===================================
+   BUTTON STYLES
+=================================== */
+
+.btn{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    padding:12px 20px;
+    border-radius:var(--radius-md);
+    font-weight:600;
+    transition:var(--transition);
+}
+
+.btn-primary{
+    background:var(--primary);
+    color:#fff;
+}
+
+.btn-primary:hover{
+    background:var(--primary-hover);
+}
+
+.btn-success{
+    background:var(--whatsapp);
+    color:#fff;
+}
+
+.btn-success:hover{
+    background:var(--whatsapp-hover);
+}
+
+.btn-danger{
+    background:var(--danger);
+    color:#fff;
+}
+
+/* ===================================
+   INPUT GROUP
+=================================== */
+
+.form-group{
+    margin-bottom:20px;
+}
+
+.form-group label{
+    display:block;
+    margin-bottom:8px;
+    font-size:14px;
+    color:var(--text-secondary);
+    font-weight:500;
+}
+
+.error{
+    display:block;
+    margin-top:7px;
+    color:var(--danger);
+    font-size:12px;
+    font-weight:600;
+    line-height:1.35;
+}
+
+.form-group:has(.error) input,
+.form-group:has(.error) textarea,
+.form-group:has(.error) select,
+.form-group:has(.error) .company-input,
+.form-group:has(.error) .quotation-input{
+    border-color:var(--danger);
+}
+
+.form-group:has(.error) input:focus,
+.form-group:has(.error) textarea:focus,
+.form-group:has(.error) select:focus,
+.form-group:has(.error) .company-input:focus-within,
+.form-group:has(.error) .quotation-input:focus-within{
+    border-color:var(--danger);
+    box-shadow:0 0 0 3px var(--danger-soft);
+}
+
+/* ===================================
+   TITLES
+=================================== */
+
+.page-title{
+    font-size:32px;
+    font-weight:700;
+    margin-bottom:10px;
+}
+
+.page-subtitle{
+    color:var(--text-secondary);
+    margin-bottom:30px;
+}
+
+/* ===================================
+   GLASS EFFECT
+=================================== */
+
+.glass{
+    background:var(--glass-bg);
+    backdrop-filter:blur(12px);
+    border:1px solid var(--glass-border);
+}
+
+/* ===================================
+   SELECTION
+=================================== */
+
+::selection{
+    background:var(--primary);
+    color:#fff;
+}
