@@ -118,7 +118,7 @@ const AppRoutes = () => {
         <Route path="/forgot-password" element={<ForgotPassword />} />
          <Route path="/reset-password/:token" element={<ResetPassword />} />
         <Route path="/change-password" element={<ChangePassword />} />
-        <Route path="/quotation/pdf/:id" element={
+        <Route path="/send-quotation-invoice/:id" element={
             <SendQuotationInvoice />
         } />
 

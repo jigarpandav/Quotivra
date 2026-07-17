@@ -16,6 +16,11 @@ import { BiPrinter } from "react-icons/bi";
 import { FaPrint } from "react-icons/fa";
 import { useRef } from "react";
 
+const getPublicQuotationUrl = (quotationId) => {
+  const siteUrl = import.meta.env.VITE_PUBLIC_SITE_URL || window.location.origin;
+  return `${siteUrl.replace(/\/$/, "")}/send-quotation-invoice/${quotationId}`;
+};
+
 
 const QuotationInvoice = () => {
 
@@ -163,7 +168,7 @@ const handleDownloadPDF = () => {
 
 const handleSendWhatsApp = () => {
   const phone = quotation.customer.contact; // 10 digit number
-  const pdfUrl = `${import.meta.env.VITE_PDF_URL}/quotation/pdf/${id}`;
+  const pdfUrl = getPublicQuotationUrl(id);
 
   const message = `Hello ${quotation.customer.person_name}, your quotation is ready.
 
