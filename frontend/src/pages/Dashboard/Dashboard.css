@@ -187,6 +187,15 @@
   background: var(--danger);
 }
 
+.dot.other {
+  background: var(--border);
+}
+
+.status-list strong {
+  color: var(--text-primary);
+  margin-left: auto;
+}
+
 .dashboard-table-header {
   display: flex;
   justify-content: space-between;

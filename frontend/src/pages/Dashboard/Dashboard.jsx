@@ -41,8 +41,35 @@ const Dashboard = () => {
     totalQuotations: dashboardData.totalQuotations || 0,
     draftQuotations: dashboardData.totalDraftQuotations || 0,
     approvedQuotations: dashboardData.totalApprovedQuotations || 0,
+    rejectedQuotations: dashboardData.totalRejectedQuotations || 0,
     totalRevenue: formatCurrency(dashboardData.totalRevenue) || 0,
   };
+
+  const statusTotal =
+    stats.approvedQuotations + stats.draftQuotations + stats.rejectedQuotations;
+  const otherQuotations = Math.max(stats.totalQuotations - statusTotal, 0);
+  const chartTotal = stats.totalQuotations || statusTotal;
+
+  const approvedPercent = chartTotal
+    ? (stats.approvedQuotations / chartTotal) * 100
+    : 0;
+  const draftPercent = chartTotal
+    ? (stats.draftQuotations / chartTotal) * 100
+    : 0;
+  const rejectedPercent = chartTotal
+    ? (stats.rejectedQuotations / chartTotal) * 100
+    : 0;
+
+  const statusChartStyle = chartTotal
+    ? {
+        background: `conic-gradient(
+          var(--success) 0 ${approvedPercent}%,
+          var(--warning) ${approvedPercent}% ${approvedPercent + draftPercent}%,
+          var(--danger) ${approvedPercent + draftPercent}% ${approvedPercent + draftPercent + rejectedPercent}%,
+          var(--border) ${approvedPercent + draftPercent + rejectedPercent}% 100%
+        )`,
+      }
+    : undefined;
 
 
 
@@ -140,15 +167,18 @@ const Dashboard = () => {
             <h3>Quotation Status</h3>
 
             <div className="status-box">
-              <div className="status-circle">
+              <div className="status-circle" style={statusChartStyle}>
                 <span>{stats.totalQuotations}</span>
                 <small className="!text-white text-stone-100">Total</small>
               </div>
 
               <div className="status-list">
-                <p><span className="dot approved"></span> Approved</p>
-                <p><span className="dot draft"></span> Draft</p>
-                <p><span className="dot rejected"></span> Rejected</p>
+                <p><span className="dot approved"></span> Approved <strong>{stats.approvedQuotations}</strong></p>
+                <p><span className="dot draft"></span> Draft <strong>{stats.draftQuotations}</strong></p>
+                <p><span className="dot rejected"></span> Rejected <strong>{stats.rejectedQuotations}</strong></p>
+                {otherQuotations > 0 && (
+                  <p><span className="dot other"></span> Other <strong>{otherQuotations}</strong></p>
+                )}
               </div>
             </div>
           </div>
