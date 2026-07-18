@@ -138,13 +138,36 @@ function handleCancel() {
 }
 
 
-const handleDownloadPDF = () => {
+const handleDownloadPDF = async () => {
   const element = document.getElementById("quotation-pdf");
 
   if (!element) {
     toast.error("PDF section not found");
     return;
   }
+
+  const pdfElement = element.cloneNode(true);
+  const pdfWrapper = document.createElement("div");
+  const pdfWidth = 900;
+
+  Object.assign(pdfWrapper.style, {
+    position: "fixed",
+    top: "0",
+    left: "-10000px",
+    width: `${pdfWidth}px`,
+    background: "#ffffff",
+    pointerEvents: "none",
+  });
+
+  Object.assign(pdfElement.style, {
+    width: `${pdfWidth}px`,
+    maxWidth: "none",
+    margin: "0",
+    overflow: "visible",
+  });
+
+  pdfWrapper.appendChild(pdfElement);
+  document.body.appendChild(pdfWrapper);
 
   const options = {
     margin: 5,
@@ -154,6 +177,10 @@ const handleDownloadPDF = () => {
       scale: 3,
       useCORS: true,
       backgroundColor: "#ffffff",
+      windowWidth: 1200,
+      width: pdfWidth,
+      scrollX: 0,
+      scrollY: 0,
     },
     jsPDF: {
       unit: "mm",
@@ -162,7 +189,11 @@ const handleDownloadPDF = () => {
     },
   };
 
-  html2pdf().set(options).from(element).save();
+  try {
+    await html2pdf().set(options).from(pdfElement).save();
+  } finally {
+    pdfWrapper.remove();
+  }
 };
 
 

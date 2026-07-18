@@ -57,22 +57,22 @@ const Navbar = () => {
             Dashboard
           </NavLink>
 
-          <NavLink to="/quotations" onClick={closeMenu}>
+          <NavLink to="/quotations" end onClick={closeMenu}>
             <FaFileInvoice />
             Quotations
           </NavLink>
 
-          <NavLink to="/quotations/view" onClick={closeMenu}>
+          <NavLink to="/quotations/view" end onClick={closeMenu}>
             <GrFormView />
             View Quotations
           </NavLink>
 
-          <NavLink to="/company-setting" onClick={closeMenu}>
+          <NavLink to="/company-setting" end onClick={closeMenu}>
             <FaBuilding />
             Company Setting
           </NavLink>
 
-          <NavLink to="/company-setting/view" onClick={closeMenu}>
+          <NavLink to="/company-setting/view" end onClick={closeMenu}>
             <FaBuilding />
           View Company Setting
           </NavLink>

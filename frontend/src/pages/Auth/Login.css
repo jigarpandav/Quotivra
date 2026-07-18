@@ -163,8 +163,9 @@
 /* Responsive */
 @media (max-width: 576px) {
   .auth-page {
-    align-items: flex-start;
+    align-items: center;
     padding: 18px 14px;
+    overflow-y: auto;
   }
 
   .auth-card {
@@ -225,7 +226,7 @@
 
 @media (max-height: 640px) {
   .auth-page {
-    align-items: flex-start;
+    align-items: center;
     overflow-y: auto;
   }
 }

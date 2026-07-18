@@ -9,11 +9,13 @@
 .quotation-sheet {
   background: #fff;
   color: #111827;
+  width: 100%;
   max-width: 900px;
   margin: auto;
   padding: 28px;
   border: 1px solid #9ca3af;
   font-size: 14px;
+  overflow-x: hidden;
 }
 
 .quotation-top {
@@ -86,6 +88,7 @@
 .quotation-table {
   border: 1px solid #9ca3af;
   color: #111827;
+  min-width: 0;
 }
 
 .quotation-items-mobile {
@@ -291,7 +294,7 @@
   }
 
   .invoice-action-buttons {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .quotation-sheet {
@@ -432,6 +435,131 @@
   }
 }
 
+@media (max-width: 768px) {
+  .view-quotation-page .container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .quotation-sheet {
+    width: 900px;
+    max-width: none;
+    margin: 0;
+    padding: 28px;
+    border-radius: 0;
+    font-size: 14px;
+    overflow: visible;
+  }
+
+  .quotation-top {
+    grid-template-columns: 160px 1fr;
+    gap: 20px;
+    padding: 18px;
+    text-align: initial;
+  }
+
+  .quotation-logo-box img {
+    width: 95px;
+    height: 95px;
+    margin: 0;
+  }
+
+  .quotation-company-info {
+    text-align: right;
+  }
+
+  .quotation-company-info h2 {
+    font-size: 26px;
+  }
+
+  .quotation-section-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .quotation-amount-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .quotation-bottom-grid {
+    grid-template-columns: 1fr 1fr 1.1fr;
+  }
+
+  .quotation-box,
+  .quotation-amount-grid > div:first-child,
+  .quotation-bottom-grid > div {
+    border-right: 1px solid #9ca3af;
+  }
+
+  .quotation-box:last-child,
+  .quotation-bottom-grid > div:last-child {
+    border-right: none;
+  }
+
+  .quotation-bottom-grid > div {
+    border-bottom: none;
+  }
+
+  .quotation-box-body {
+    min-height: 140px;
+    padding: 12px 10px;
+  }
+
+  .quotation-bottom-body {
+    min-height: 130px;
+    padding: 12px 10px;
+  }
+
+  .quotation-box.text-right {
+    text-align: right;
+  }
+
+  .quotation-sheet .table-responsive {
+    display: block;
+    overflow-x: visible;
+  }
+
+  .quotation-sheet table,
+  .quotation-sheet .quotation-table {
+    min-width: 0;
+  }
+
+  .quotation-table th,
+  .quotation-table td {
+    padding: 7px;
+    font-size: 14px;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  .quotation-items-mobile {
+    display: none;
+  }
+
+  .quotation-amount-grid {
+    border-top: 0;
+  }
+
+  .quotation-amount-words {
+    min-height: 58px;
+    padding: 18px 12px;
+    text-align: center;
+  }
+
+  .quotation-summary-row {
+    gap: 0;
+  }
+
+  .quotation-sign-box {
+    min-height: 160px;
+    padding: 28px 40px;
+  }
+
+  .quotation-sign-box .signature {
+    margin-top: 2.5rem !important;
+    font-size: 2rem;
+  }
+}
+
 @media print {
   @page {
     size: A4 portrait;
@@ -560,5 +688,156 @@
   tr {
     page-break-inside: avoid !important;
     break-inside: avoid !important;
+  }
+}
+
+@media print {
+  body * {
+    visibility: hidden !important;
+  }
+
+  #quotation-pdf,
+  #quotation-pdf * {
+    visibility: visible !important;
+  }
+
+  .view-quotation-page,
+  .view-quotation-page .container {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #fff !important;
+    overflow: visible !important;
+  }
+
+  .view-quotation-actions,
+  .navbar,
+  header,
+  nav {
+    display: none !important;
+  }
+
+  #quotation-pdf {
+    position: absolute !important;
+    inset: 0 auto auto 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 8mm !important;
+    border: 1px solid #9ca3af !important;
+    font-size: 10px !important;
+    line-height: 1.25 !important;
+    overflow: visible !important;
+  }
+
+  .quotation-top {
+    display: grid !important;
+    grid-template-columns: 145px 1fr !important;
+    gap: 14px !important;
+    padding: 10px !important;
+    text-align: initial !important;
+  }
+
+  .quotation-logo-box img {
+    width: 80px !important;
+    height: 80px !important;
+    margin: 0 !important;
+  }
+
+  .quotation-company-info {
+    text-align: right !important;
+  }
+
+  .quotation-company-info h2 {
+    font-size: 22px !important;
+  }
+
+  .quotation-section-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+  }
+
+  .quotation-box,
+  .quotation-amount-grid > div:first-child,
+  .quotation-bottom-grid > div {
+    border-right: 1px solid #9ca3af !important;
+  }
+
+  .quotation-box:last-child,
+  .quotation-bottom-grid > div:last-child {
+    border-right: none !important;
+  }
+
+  .quotation-box.text-right {
+    text-align: right !important;
+  }
+
+  .quotation-box-title {
+    padding: 5px 8px !important;
+    font-size: 10px !important;
+  }
+
+  .quotation-box-body,
+  .quotation-bottom-body {
+    padding: 8px !important;
+    min-height: 62px !important;
+  }
+
+  .quotation-sheet .table-responsive {
+    display: block !important;
+    overflow: visible !important;
+  }
+
+  .quotation-items-mobile {
+    display: none !important;
+  }
+
+  .quotation-table {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .quotation-table th,
+  .quotation-table td {
+    padding: 5px 6px !important;
+    font-size: 10px !important;
+  }
+
+  .quotation-amount-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    border-top: 0 !important;
+  }
+
+  .quotation-bottom-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr 1.1fr !important;
+  }
+
+  .quotation-bottom-grid > div {
+    border-bottom: none !important;
+  }
+
+  .quotation-amount-words {
+    min-height: 42px !important;
+    padding: 12px 10px !important;
+    text-align: center !important;
+  }
+
+  .quotation-summary-row {
+    padding: 7px 8px !important;
+    gap: 0 !important;
+  }
+
+  .quotation-sign-box {
+    min-height: 104px !important;
+    padding: 16px 28px !important;
+  }
+
+  .quotation-sign-box .signature {
+    margin-top: 1.2rem !important;
+    font-size: 22px !important;
   }
 }

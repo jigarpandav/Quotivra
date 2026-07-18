@@ -3,7 +3,6 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import api from "../../axios";
 import formatDate from "../../utils/formatDate";
-import { useNavigate } from "react-router-dom";
 import formatCurrency from "../../utils/formatCurrency";
 import toWords from "../../utils/nubertoWord"
 import html2pdf from "html2pdf.js";
@@ -21,7 +20,6 @@ const SendQuotationInvoice = () => {
 
     const {id} = useParams();
     const Adminid = localStorage.getItem("admin_id");
-    const navigate = useNavigate();
     const [quotations, setQuotation] = React.useState({});
     const [company, setCompany] = React.useState({});
     const[quotationItems, setQuotationItems] = React.useState([]);
@@ -128,18 +126,38 @@ const totalQty = quotation.items.reduce(
   0
 );
 
-function handleCancel() {
-    navigate("/quotations/view")
-}
 
 
-const handleDownloadPDF = () => {
+const handleDownloadPDF = async () => {
   const element = document.getElementById("quotation-pdf");
 
   if (!element) {
     toast.error("PDF section not found");
     return;
   }
+
+  const pdfElement = element.cloneNode(true);
+  const pdfWrapper = document.createElement("div");
+  const pdfWidth = 900;
+
+  Object.assign(pdfWrapper.style, {
+    position: "fixed",
+    top: "0",
+    left: "-10000px",
+    width: `${pdfWidth}px`,
+    background: "#ffffff",
+    pointerEvents: "none",
+  });
+
+  Object.assign(pdfElement.style, {
+    width: `${pdfWidth}px`,
+    maxWidth: "none",
+    margin: "0",
+    overflow: "visible",
+  });
+
+  pdfWrapper.appendChild(pdfElement);
+  document.body.appendChild(pdfWrapper);
 
   const options = {
     margin: 5,
@@ -149,6 +167,10 @@ const handleDownloadPDF = () => {
       scale: 3,
       useCORS: true,
       backgroundColor: "#ffffff",
+      windowWidth: 1200,
+      width: pdfWidth,
+      scrollX: 0,
+      scrollY: 0,
     },
     jsPDF: {
       unit: "mm",
@@ -157,26 +179,14 @@ const handleDownloadPDF = () => {
     },
   };
 
-  html2pdf().set(options).from(element).save();
+  try {
+    await html2pdf().set(options).from(pdfElement).save();
+  } finally {
+    pdfWrapper.remove();
+  }
 };
 
 
-const handleSendWhatsApp = () => {
-  const phone = quotation.customer.contact; // 10 digit number
-  const pdfUrl = `${import.meta.env.VITE_LOGO_URL}/api/quotation/pdf/${id}`;
-
-  const message = `Hello ${quotation.customer.person_name}, your quotation is ready.
-
-Quotation No: ${quotation.quotationNo}
-Amount: ${formatCurrency(subTotal)}
-
-Download PDF:
-${pdfUrl}`;
-
-  const whatsappUrl = `https://wa.me/91${phone}?text=${encodeURIComponent(message)}`;
-
-  window.open(whatsappUrl, "_blank");
-};
 
 
 
@@ -210,18 +220,7 @@ function handlePrint() {
     <span className="font-medium">Download PDF</span>
   </button>
 
-  {/* WhatsApp */}
-  <button
-    className="flex items-center justify-center gap-2 h-11 w-44 px-5 rounded-lg
-    !bg-green-600  border border-green-600
-    hover:bg-green-700 hover:border-green-700
-    hover:shadow-lg hover:shadow-green-500/20
-    active:scale-95 transition-all duration-200"
-    onClick={handleSendWhatsApp}
-  >
-    <FaWhatsapp  className="text-lg h-14 w-6  text-white  py-3" />
-    <span className="font-medium">Send WhatsApp</span>
-  </button>
+
 <button
   className="btn btn-primary quotation-pdf"
   onClick={handlePrint}
@@ -229,18 +228,7 @@ function handlePrint() {
   <FaPrint /> Print
 </button>
 
-  {/* Cancel */}
-  <button
-    className="flex items-center justify-center gap-2 h-11 w-33 px-5 rounded-lg
-    border border-red-500/40 !bg-red-500 text-red-400
-    hover:bg-red-500 hover:text-white hover:border-red-500
-    hover:shadow-lg hover:shadow-red-500/20
-    active:scale-95 transition-all duration-200"
-    onClick={handleCancel}
-  >
-    <MdCancel className="text-lg h-11 w-6" />
-    <span className="font-medium">Cancel</span>
-  </button>
+
 
 </div>
         </div>
