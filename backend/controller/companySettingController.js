@@ -14,6 +14,12 @@ const createCompanySetting = async (req,res) => {
             })
         }
 
+        if(!req.file){
+            return res.status(400).json({
+                message: "Company logo is required."
+            })
+        }
+
         const company_logo = req.file
   ? `/uploads/${req.file.filename}`
   : null;
@@ -73,14 +79,14 @@ const updateCompanySetting = async (req,res) => {
         }
 
         let company_logo = existingCompanySettings.company_logo;
-        if(req.files?.company_logo?.[0]){
+        if(req.file){
             const oldPath = path.join(process.cwd(), existingCompanySettings.company_logo.replace(/^\/+/, ""));
 
             if(existingCompanySettings.company_logo && fs.existsSync(oldPath))
             {
                 fs.unlinkSync(oldPath)
             }
-            company_logo = req.files.company_logo[0].filename
+            company_logo = `/uploads/${req.file.filename}`
         }
        
 const updatedCompanySetting = await companySettingModel.findByIdAndUpdate(
