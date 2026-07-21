@@ -1,631 +1,675 @@
 # Quotivra Backend
 
-> REST API backend for secure, fast, and reliable quotation management.
+## Node.js REST API For Quotation Management
 
-Quotivra Backend is the server-side application for the Quotivra Smart Quotation Management System. It provides APIs for administrator authentication, password recovery, company settings, quotation management, dashboard data, image uploads, and quotation-related business logic consumed by the Quotivra frontend.
+The Quotivra backend is the Express.js API layer for administrator authentication, company settings, dashboard summaries, and quotation management. It connects the React frontend to MongoDB through Mongoose models and exposes REST-style endpoints under `/api`.
 
-[![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)](https://nodejs.org/)
-[![Express.js](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)](https://expressjs.com/)
-[![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/)
-[![Mongoose](https://img.shields.io/badge/Mongoose-880000?style=for-the-badge)](https://mongoosejs.com/)
-[![JWT](https://img.shields.io/badge/JWT-Authentication-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white)](https://jwt.io/)
-[![REST API](https://img.shields.io/badge/API-REST-2563EB?style=for-the-badge)](#api-documentation)
+[Master README](../README.md) 
+[Frontend README](../frontend/README.md)
+[Screenshots](../screenshots/README.md) 
 
-**Repository:** `<backend-repository-url>`  
-**Production API:** `<production-api-url>`
+
+![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white)
+![Express.js](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)
+![Mongoose](https://img.shields.io/badge/Mongoose-880000?style=for-the-badge)
+![JWT](https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white)
+![REST API](https://img.shields.io/badge/REST_API-02569B?style=for-the-badge)
+![MIT License](https://img.shields.io/github/license/jigarpandav/Quotivra)
+
+---
 
 ## Table of Contents
 
 - [Backend Overview](#backend-overview)
-- [Key Features](#key-features)
-- [System Architecture](#system-architecture)
-- [Request Lifecycle](#request-lifecycle)
+- [Responsibilities](#responsibilities)
 - [Technology Stack](#technology-stack)
+- [Architecture Diagram](#architecture-diagram)
+- [Request Lifecycle](#request-lifecycle)
 - [Folder Structure](#folder-structure)
-- [Database Design](#database-design)
-- [API Documentation](#api-documentation)
+- [Database Collections](#database-collections)
+- [Logical Data Relationships](#logical-data-relationships)
 - [Authentication Flow](#authentication-flow)
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
+- [JWT-Protected Routes](#jwt-protected-routes)
+- [Password Hashing](#password-hashing)
+- [Company Settings APIs](#company-settings-apis)
+- [Quotation APIs](#quotation-apis)
+- [PDF Generation Support](#pdf-generation-support)
+- [WhatsApp Sharing Support](#whatsapp-sharing-support)
 - [Environment Variables](#environment-variables)
-- [Running the Backend](#running-the-backend)
-- [Available Scripts](#available-scripts)
+- [Installation](#installation)
+- [Running The Server](#running-the-server)
+- [API Endpoint Tables](#api-endpoint-tables)
 - [Example API Requests](#example-api-requests)
-- [API Response Format](#api-response-format)
 - [Error Handling](#error-handling)
-- [Security](#security)
-- [PDF Generation](#pdf-generation)
-- [WhatsApp Support](#whatsapp-support)
-- [Uploads Directory](#uploads-directory)
+- [Security Considerations](#security-considerations)
+- [CORS Configuration](#cors-configuration)
 - [API Testing](#api-testing)
-- [Deployment](#deployment)
-- [Performance Considerations](#performance-considerations)
+- [Deployment Guidance](#deployment-guidance)
 - [Troubleshooting](#troubleshooting)
 - [Future Improvements](#future-improvements)
 - [Contributing](#contributing)
-- [Author](#author)
 - [License](#license)
+- [Author](#author)
+
+---
 
 ## Backend Overview
 
-Quotivra Backend powers the data and business logic for the Quotivra frontend. It is built with Node.js, Express.js, MongoDB, and Mongoose, and exposes REST-style APIs under the `/api` path.
+Quotivra Backend provides the server-side business logic for the Smart Quotation Management System. It receives requests from the React frontend, validates request data, performs MongoDB operations with Mongoose, and returns JSON responses.
 
-The backend handles administrator registration and login, password hashing, JWT generation, password reset email support, company profile data, quotation records, quotation items, dashboard summaries, and company logo uploads. The frontend communicates with these APIs through HTTP requests, usually by sending form data or JSON payloads.
+The backend supports a lightweight quotation model. Customers and products are entered directly inside quotation workflows instead of being managed as separate modules.
 
-Secure APIs are important for this system because quotations include administrator, customer, company, and pricing information. Authentication, validation, environment-variable hygiene, and careful error handling help protect that business data.
+---
 
-## Key Features
+## Responsibilities
 
-### Authentication
+- Register and authenticate administrators
+- Hash administrator passwords
+- Generate JWTs during login
+- Store and retrieve company settings
+- Store quotations and quotation items
+- Calculate quotation item totals on the server
+- Retrieve dashboard summary data
+- Serve uploaded company logo files
+- Return consistent JSON responses and HTTP status codes
 
-- Administrator registration
-- Administrator login
-- Password hashing with `bcrypt`
-- JWT token generation during login
-- Administrator lookup by ID
-- Forgot password flow
-- Reset password with generated token
-- Change password with old-password verification
-
-### Company Settings
-
-- Create company settings
-- Retrieve company settings by administrator
-- Update company settings
-- Upload company logo images with Multer
-- Store company contact, GST, website, terms, and signature-related information
-
-### Quotation Management
-
-- Create quotations
-- Store quotation items separately from quotation records
-- Retrieve quotations by administrator
-- Search, filter, and paginate quotation lists
-- Retrieve a quotation by ID
-- Update draft quotations
-- Delete quotations and related quotation items
-- Calculate quotation item totals from price and quantity
-
-### Dashboard
-
-- Total quotation counts
-- Approved, draft, and rejected quotation counts
-- Approved quotation revenue aggregation
-- Monthly revenue aggregation
-- Recent quotation data
-
-### Email Support
-
-- Password reset emails through Nodemailer
-- Gmail transporter configuration through environment variables
-
-### Uploads
-
-- Company logo upload support
-- Image file validation for JPG, JPEG, PNG, and WEBP
-- File size limit of 5 MB
-- Static serving of uploaded files from `/uploads`
-
-## System Architecture
-
-```mermaid
-flowchart LR
-    A[Quotivra Frontend] -->|HTTP Requests| B[Express REST API]
-    B --> C[Routers]
-    C --> D[Controllers]
-    D --> E[Mongoose Models]
-    E --> F[(MongoDB)]
-    D --> G[Upload Handling]
-    D --> H[Email Utility]
-    D --> I[JWT Generation]
-```
-
-## Request Lifecycle
-
-```mermaid
-sequenceDiagram
-    participant Client as Frontend Client
-    participant API as Express API
-    participant Router as Router
-    participant Controller as Controller
-    participant DB as MongoDB
-
-    Client->>API: HTTP request to /api/*
-    API->>Router: Match route and parse request body
-    Router->>Controller: Call controller handler
-    Controller->>DB: Read or write data with Mongoose
-    DB-->>Controller: Database result
-    Controller-->>Client: JSON response with status code
-```
-
-> Note: The current router files do not show JWT middleware applied to protected API routes. Login returns a JWT, and frontend routes use a token check, but server-side authorization middleware should be added before treating sensitive backend routes as fully protected.
+---
 
 ## Technology Stack
 
-| Category | Technology | Purpose |
-| --- | --- | --- |
-| Runtime | Node.js | Runs the backend JavaScript application |
-| Framework | Express.js | Defines HTTP server, middleware, and API routes |
-| Database | MongoDB | Stores administrators, company settings, quotations, and quotation items |
-| ODM | Mongoose | Defines schemas and performs database operations |
-| Authentication | JSON Web Token | Creates login tokens for authenticated sessions |
-| Password Security | bcrypt | Hashes and verifies administrator passwords |
-| Configuration | dotenv | Loads environment variables from `.env` |
-| Cross-Origin Access | cors | Allows frontend-to-backend API communication |
-| File Uploads | multer | Handles company logo uploads |
-| Email | nodemailer | Sends password reset emails |
-| PDF Library | pdfkit | Installed for PDF-related backend functionality |
-| API Style | REST API | Organizes backend operations as HTTP endpoints |
+| Category | Technology |
+| --- | --- |
+| Runtime | Node.js |
+| Framework | Express.js |
+| Database | MongoDB |
+| ODM | Mongoose |
+| Authentication | JWT |
+| Password Security | bcrypt-compatible hashing |
+| Configuration | dotenv |
+| Cross-Origin Access | cors |
+| API Style | REST API |
+
+---
+
+## Architecture Diagram
+
+                    👤 User
+                        │
+                        ▼
+            ⚛️ React + Vite Frontend
+                        │
+              HTTP / Axios Requests
+                        │
+                        ▼
+               🚀 Express.js Backend
+                        │
+        ┌────────────────────────────────┐
+        │        🛡️ Middleware           │
+        │ CORS • JSON • JWT • Multer     │
+        └──────────────┬─────────────────┘
+                       │
+                       ▼
+                 🛣️ API Routes
+                       │
+                       ▼
+              🎯 Controllers
+             (Business Logic)
+              ┌────────┴────────┐
+              ▼                 ▼
+      📦 Mongoose Models   📁 Uploads
+              │
+              ▼
+        🍃 MongoDB Atlas
+
+              🔑 JWT Service
+                    │
+                    ▼
+          Protected React Frontend
+
+---
+
+## Request Lifecycle
+
+              👤 User
+                 │
+                 ▼
+        ⚛️ React + Vite
+                 │
+          Axios API Request
+                 │
+                 ▼
+         🚀 Express Server
+                 │
+        ┌────────┴────────┐
+        ▼                 ▼
+ 🛡️ Middleware      🛣️ API Routes
+                         │
+                         ▼
+                  🎯 Controllers
+                  ┌──────┼────────┐
+                  ▼      ▼        ▼
+          📦 Models   📁 Upload  🔑 JWT
+                  │
+                  ▼
+             🍃 MongoDB
+                  │
+                  ▼
+           📦 JSON Response
+                  │
+                  ▼
+           ⚛️ React + Vite
+                  │
+                  ▼
+               👤 User
+
+---
 
 ## Folder Structure
 
 ```text
 backend/
 |
-|-- config/
-|   |-- db.js
-|   |-- generateToken.js
-|   |-- mail.js
-|   `-- multer.js
-|
-|-- controller/
-|   |-- authController.js
-|   |-- companySettingController.js
-|   |-- dashboardController.js
-|   `-- quotationController.js
-|
-|-- models/
-|   |-- Admin.js
-|   |-- CompanySettings.js
-|   |-- Quotation.js
-|   `-- QuotationItems.js
-|
-|-- router/
-|   |-- adminRouter.js
-|   |-- companySettingRouter.js
-|   |-- dashbaordRouter.js
-|   `-- quotationRouter.js
-|
-|-- index.js
-|-- package.json
-`-- package-lock.json
++-- config/
+|   +-- db.js
+|   +-- generateToken.js
+|   +-- mail.js
+|   +-- multer.js
++-- controller/
+|   +-- authController.js
+|   +-- companySettingController.js
+|   +-- dashboardController.js
+|   +-- quotationController.js
++-- models/
+|   +-- Admin.js
+|   +-- CompanySettings.js
+|   +-- Quotation.js
+|   +-- QuotationItems.js
++-- router/
+|   +-- adminRouter.js
+|   +-- companySettingRouter.js
+|   +-- dashbaordRouter.js
+|   +-- quotationRouter.js
++-- uploads/
++-- index.js
++-- package.json
 ```
 
-| Path | Purpose |
+| Folder | Purpose |
 | --- | --- |
-| `config/db.js` | Connects the application to MongoDB using `MONGO_URL` |
-| `config/generateToken.js` | Generates random password reset tokens |
-| `config/mail.js` | Sends password reset emails with Nodemailer |
-| `config/multer.js` | Configures disk storage, file type checks, and upload size limits |
-| `controller/` | Contains request handlers and business logic |
-| `models/` | Contains Mongoose schema definitions |
-| `router/` | Defines Express route mappings |
-| `index.js` | Creates the Express app, applies middleware, mounts routers, connects DB, and starts the server |
-| `package.json` | Defines dependencies and npm scripts |
+| `config/` | Database, upload, mail, and token helper configuration |
+| `controller/` | API request handlers and business logic |
+| `models/` | Mongoose schemas for MongoDB collections |
+| `router/` | Express route declarations |
+| `uploads/` | Uploaded company logo files |
+| `index.js` | App setup, middleware, routes, database connection, and server startup |
 
-## Database Design
+---
 
-Exact schema definitions should be verified from the Mongoose model files in `models/`.
+## Database Collections
 
-| Collection | Model | Purpose | Main Data |
-| --- | --- | --- | --- |
-| `admins` | `Admin` | Stores administrator accounts | Name, email, hashed password, password reset token data, timestamps |
-| `companysettings` | `CompanySettings` | Stores business profile data for an administrator | Admin reference, company name, logo path, address, contact details, website, terms, signature, GST, timestamps |
-| `quotations` | `Quotation` | Stores quotation-level customer and pricing data | Admin reference, quotation number, customer details, quotation date, total amount, status, timestamps |
-| `quotationitems` | `QuotationItems` | Stores individual product rows for quotations | Admin reference, quotation reference, product name, price, quantity, total, timestamps |
+| Collection | Model | Purpose |
+| --- | --- | --- |
+| `admins` | `Admin` | Stores administrator authentication and password recovery information |
+| `company_settings` | `CompanySettings` | Stores company profile, branding, contact, GST, terms, and signature information |
+| `quotations` | `Quotation` | Stores quotation-level customer, date, amount, number, and status information |
+| `quotation_items` | `QuotationItems` | Stores product rows belonging to quotations |
 
-Quotation items safely belong to quotations through the `quotation_id` reference. Quotations and company settings also reference the administrator through `admin_id`.
+Actual MongoDB collection names can vary based on Mongoose pluralization. The names above describe the logical collections used by the application.
 
-## API Documentation
+---
 
-All endpoints below are mounted from `index.js` under the `/api` prefix.
+## Logical Data Relationships
 
-Access levels reflect the current route implementation. The current backend does not apply JWT middleware in the router files, so routes that receive `admin_id` are documented as **Admin ID required** instead of claiming full Bearer-token protection.
+                 ┌─────────────────────┐
+                 │       ADMINS        │
+                 ├─────────────────────┤
+                 │ _id (PK)            │
+                 │ name                │
+                 │ email               │
+                 │ password            │
+                 └─────────┬───────────┘
+                           │
+         configures (1:1)  │
+                           ▼
+          ┌────────────────────────────────┐
+          │      COMPANY_SETTINGS          │
+          ├────────────────────────────────┤
+          │ _id (PK)                       │
+          │ admin_id (FK)                  │
+          │ company_name                   │
+          │ company_logo                   │
+          │ address                        │
+          │ city                           │
+          │ state                          │
+          │ contact                        │
+          │ website                        │
+          │ gst                            │
+          └────────────────────────────────┘
 
-### Authentication Endpoints
 
-| Method | Endpoint | Access | Description |
-| --- | --- | --- | --- |
-| `POST` | `/api/admin/register` | Public | Register a new administrator |
-| `POST` | `/api/admin/login` | Public | Log in an administrator and return a JWT token |
-| `POST` | `/api/admin` | Admin ID required | Retrieve administrator details |
-| `POST` | `/api/admin/forgot-password` | Public | Send a password reset email |
-| `POST` | `/api/admin/reset-password/:token` | Public token route | Reset password with a reset token |
-| `POST` | `/api/admin/change-password` | Admin ID and old password required | Change an administrator password |
+                           │
+                creates (1:N)
+                           ▼
+          ┌────────────────────────────────┐
+          │         QUOTATIONS             │
+          ├────────────────────────────────┤
+          │ _id (PK)                       │
+          │ admin_id (FK)                  │
+          │ quotation_no                   │
+          │ customer_name                  │
+          │ customer_contact               │
+          │ quotation_date                 │
+          │ status                         │
+          │ total_quantity                 │
+          │ total_amount                   │
+          └───────────────┬────────────────┘
+                          │
+               contains (1:N)
+                          ▼
+          ┌────────────────────────────────┐
+          │      QUOTATION_ITEMS           │
+          ├────────────────────────────────┤
+          │ _id (PK)                       │
+          │ quotation_id (FK)              │
+          │ admin_id (FK)                  │
+          │ product_name                   │
+          │ price                          │
+          │ quantity                       │
+          │ total                          │
+          └────────────────────────────────┘
 
-Generic login request example:
+MongoDB is not a SQL database. This diagram represents logical document references through ObjectIds such as `admin_id` and `quotation_id`.
 
-```json
-{
-  "email": "<admin-email>",
-  "password": "<admin-password>"
-}
-```
-
-### Company Settings Endpoints
-
-| Method | Endpoint | Access | Description |
-| --- | --- | --- | --- |
-| `POST` | `/api/company-setting` | Admin ID required | Create company settings and optionally upload a company logo |
-| `POST` | `/api/company-settings` | Admin ID required | Retrieve company settings for an administrator |
-| `PUT` | `/api/company-settings/update` | Admin ID and company ID required | Update existing company settings |
-
-Generic company settings request example:
-
-```json
-{
-  "admin_id": "<admin-id>",
-  "company_name": "<company-name>",
-  "address": "<company-address>",
-  "city": "<city>",
-  "state": "<state>",
-  "contact": "<contact-number>",
-  "GST": "<gst-number>"
-}
-```
-
-When uploading a company logo, send multipart form data with a `company_logo` file field.
-
-### Quotation Endpoints
-
-| Method | Endpoint | Access | Description |
-| --- | --- | --- | --- |
-| `POST` | `/api/quotation` | Admin ID required | Create a quotation and related quotation items |
-| `PUT` | `/api/quotation/update` | Admin ID and quotation ID required | Update a draft quotation and replace its items |
-| `POST` | `/api/quotations` | Admin ID required | Retrieve quotations with pagination, search, status filter, and period filter support |
-| `POST` | `/api/quotation/id` | Quotation ID required | Retrieve one quotation and its quotation items |
-| `POST` | `/api/quotation/delete` | Quotation ID required | Delete a quotation and its related quotation items |
-
-Generic quotation request example:
-
-```json
-{
-  "admin_id": "<admin-id>",
-  "customer_name": "<customer-name>",
-  "customer_contact": "<customer-contact>",
-  "quotation_date": "<date>",
-  "total_amount": "<total-amount>",
-  "status": "draft",
-  "products": [
-    {
-      "product_name": "<product-name>",
-      "price": "<price>",
-      "quantity": "<quantity>"
-    }
-  ]
-}
-```
-
-Generic quotation-list request example:
-
-```json
-{
-  "admin_id": "<admin-id>",
-  "page": 1,
-  "limit": 5,
-  "search": "<optional-search-text>",
-  "status": "<draft-approved-or-rejected>",
-  "period": "<this-month-last-month-this-year-or-last-year>"
-}
-```
-
-### Dashboard Endpoint
-
-| Method | Endpoint | Access | Description |
-| --- | --- | --- | --- |
-| `POST` | `/api/dashboard` | Admin ID required | Retrieve quotation counts, revenue summaries, monthly revenue, and recent quotations |
+---
 
 ## Authentication Flow
 
-```mermaid
-flowchart TD
-    A[Register Administrator] --> B[Hash Password]
-    B --> C[Save Administrator]
-    C --> D[Login]
-    D --> E[Verify Credentials]
-    E --> F[Generate JWT]
-    F --> G[Client Stores Token]
-    G --> H[Client Uses Authenticated UI]
-    H --> I[Backend Routes Receive Requests]
-```
+                    🚀 Start
+                        │
+                        ▼
+               📝 Register Account
+                        │
+                        ▼
+        ✅ Validate User Information
+      (Name • Email • Password)
+                        │
+                        ▼
+          🔒 Hash Password (bcrypt)
+                        │
+                        ▼
+           💾 Store Admin in MongoDB
+                        │
+                        ▼
+                  🔑 Login
+                        │
+                        ▼
+        🛡️ Verify Email & Password
+                        │
+                        ▼
+             ┌─────────────────┐
+             │ Credentials OK? │
+             └──────┬──────────┘
+                 Yes│        │No
+                    ▼        ▼
+          🎫 Generate JWT   ❌ Invalid Credentials
+                    │             │
+                    ▼             │
+     📦 Send Token & User Data    │
+                    │             │
+                    ▼             │
+           ⚛️ React Frontend ◄────┘
+                    │
+                    ▼
+        📊 Protected Dashboard
+                    │
+                    ▼
+             ✅ Authenticated
 
-Login currently generates a JWT with the administrator ID and email, expiring in 7 days. Server-side JWT verification middleware is recommended before relying on the token for backend route protection.
+---
 
-### Authentication Header
+## JWT-Protected Routes
 
-Protected backend routes should use a Bearer token pattern when JWT middleware is added:
+The login controller generates a JWT for successful authentication. The frontend uses that token for protected UI access.
+
+The current route files should be reviewed before describing backend routes as fully Bearer-token protected. If JWT middleware is added, protected API requests should use:
 
 ```http
 Authorization: Bearer <token>
 ```
 
-## Prerequisites
+---
 
-- Node.js
-- npm
-- MongoDB database or MongoDB Atlas connection
-- Email account credentials for password reset email support
+## Password Hashing
 
-## Installation
+Administrator passwords are hashed before storage and compared during login. Plain-text passwords should never be stored in MongoDB or returned in API responses.
 
-```bash
-git clone <backend-repository-url>
-cd backend
-npm install
-```
+Password-related workflows include:
 
-These commands clone the backend repository, move into the backend directory, and install the dependencies listed in `package.json`.
+- Registration password hashing
+- Login password comparison
+- Reset password hashing
+- Change password validation and hashing
+
+---
+
+## Company Settings APIs
+
+Company settings allow quotations to include business branding and contact information.
+
+Supported company settings data includes:
+
+- Company logo
+- Company name
+- Address, city, and state
+- Contact and alternative contact
+- Website
+- Terms and conditions
+- Signature
+- GST
+
+---
+
+## Quotation APIs
+
+Quotation APIs handle quotation-level records and quotation item records.
+
+Quotation-level data includes:
+
+- Administrator reference
+- Quotation number
+- Customer name
+- Customer contact
+- Quotation date
+- Total quantity
+- Total amount
+- Status: draft, approved, rejected
+
+Quotation item data includes:
+
+- Administrator reference
+- Quotation reference
+- Product name
+- Price
+- Quantity
+- Total
+
+Products are entered directly into each quotation. There is no separate product master module.
+
+---
+
+## PDF Generation Support
+
+The backend stores quotation, quotation-item, company, and administrator data required for professional quotation PDFs. PDF rendering or download behavior should match the currently implemented frontend and backend code.
+
+A quotation PDF should include company information, customer information, item table, quantity totals, grand total, terms, and signature when available.
+
+---
+
+## WhatsApp Sharing Support
+
+The backend provides quotation and customer-contact data that the frontend can use for WhatsApp sharing. Do not describe the project as having WhatsApp Business API integration unless that integration is explicitly implemented.
+
+---
 
 ## Environment Variables
 
-Create a `.env` file inside the `backend/` directory:
+Create `backend/.env`:
 
 ```env
 PORT=5000
 MONGO_URL=<your-mongodb-connection-string>
 JWT_SECRET=<your-secure-jwt-secret>
-EMAIL_USER=<your-email-address>
-EMAIL_PASS=<your-email-app-password>
 ```
 
-| Variable | Required | Description | Example |
+| Variable | Required | Purpose | Example |
 | --- | --- | --- | --- |
-| `PORT` | No | Server port. Defaults to `5000` when not provided. | `5000` |
-| `MONGO_URL` | Yes | MongoDB connection string used by Mongoose. | `mongodb://127.0.0.1:27017/quotivra` |
-| `JWT_SECRET` | Yes | Secret used to sign login JWT tokens. | `<long-random-secret>` |
-| `EMAIL_USER` | Required for forgot-password emails | Email account used by Nodemailer. | `<your-email-address>` |
-| `EMAIL_PASS` | Required for forgot-password emails | Email password or app password used by Nodemailer. | `<email-app-password>` |
+| `PORT` | No | Backend server port | `5000` |
+| `MONGO_URL` | Yes | MongoDB connection string | `mongodb://127.0.0.1:27017/quotivra` |
+| `JWT_SECRET` | Yes | Secret used to sign JWT tokens | `replace-with-secure-secret` |
 
-Security reminders:
+> Never commit `.env`, never expose `JWT_SECRET`, and never publish the MongoDB connection string.
 
-- Never commit `.env` files.
-- Use a long, random JWT secret.
-- Do not expose the MongoDB connection string publicly.
-- Use an app password or provider-approved credential for email sending.
+---
 
-## Running the Backend
+## Installation
 
-Start the development server:
+```bash
+git clone https://github.com/jigarpandav/Quotivra/tree/main/backend
+cd Quotivra/backend
+npm install
+```
+
+---
+
+## Running The Server
 
 ```bash
 npm run dev
 ```
 
-Start the server with Node:
+Production-style start:
 
 ```bash
 npm start
 ```
 
-Available scripts must always be verified from `package.json`.
+Confirm exact scripts from `backend/package.json`.
 
-## Available Scripts
+---
 
-| Script | Command | Purpose |
-| --- | --- | --- |
-| `npm run dev` | `nodemon index.js` | Starts the backend in development mode with automatic restarts |
-| `npm start` | `node index.js` | Starts the backend with Node.js |
+## API Endpoint Tables
+
+### Authentication
+
+| Method | Endpoint | Description | Access |
+| --- | --- | --- | --- |
+| POST | `/api/admin/register` | Register an administrator | Public |
+| POST | `/api/admin/login` | Authenticate an administrator | Public |
+| POST | `/api/admin` | Retrieve administrator details | Application |
+| POST | `/api/admin/forgot-password` | Request password reset | Public |
+| POST | `/api/admin/reset-password/:token` | Reset password | Public |
+| POST | `/api/admin/change-password` | Change password | Application |
+
+### Company Settings
+
+| Method | Endpoint | Description | Access |
+| --- | --- | --- | --- |
+| POST | `/api/company-setting` | Create company settings | Application |
+| POST | `/api/company-settings` | Retrieve company settings | Application |
+| PUT | `/api/company-settings/update` | Update company settings | Application |
+
+### Quotations
+
+| Method | Endpoint | Description | Access |
+| --- | --- | --- | --- |
+| POST | `/api/quotation` | Create a quotation | Application |
+| POST | `/api/quotations` | Retrieve all quotations | Application |
+| POST | `/api/quotation/id` | Retrieve one quotation | Application |
+| PUT | `/api/quotation/update` | Update a quotation | Application |
+| POST | `/api/quotation/delete` | Delete a quotation | Application |
+
+### Dashboard
+
+| Method | Endpoint | Description | Access |
+| --- | --- | --- | --- |
+| POST | `/api/dashboard` | Retrieve dashboard data | Application |
+
+Actual endpoint behavior and access control should match the route files and middleware implementation.
+
+---
 
 ## Example API Requests
 
-Login example:
+### Register
+
+```bash
+curl -X POST http://localhost:5000/api/admin/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "JP",
+    "email": "admin@example.com",
+    "password": "secure-password"
+  }'
+```
+
+### Login
 
 ```bash
 curl -X POST http://localhost:5000/api/admin/login \
   -H "Content-Type: application/json" \
   -d '{
-    "email": "<admin-email>",
-    "password": "<admin-password>"
+    "email": "admin@example.com",
+    "password": "secure-password"
   }'
 ```
 
-Quotation list example:
+### Create Quotation
 
 ```bash
-curl -X POST http://localhost:5000/api/quotations \
+curl -X POST http://localhost:5000/api/quotation \
   -H "Content-Type: application/json" \
   -d '{
     "admin_id": "<admin-id>",
-    "page": 1,
-    "limit": 5
+    "customer_name": "Sample Customer",
+    "customer_contact": "9876543210",
+    "quotation_date": "2026-07-21",
+    "total_amount": 5000,
+    "status": "draft",
+    "products": [
+      {
+        "product_name": "Sample Product",
+        "price": 2500,
+        "quantity": 2
+      }
+    ]
   }'
 ```
 
-Future Bearer-token protected request pattern:
+---
 
-```bash
-curl http://localhost:5000/api/quotations \
-  -H "Authorization: Bearer <token>"
-```
+## Error Handling
 
-Actual required request fields must match the backend controller and model validation.
-
-## API Response Format
-
-The backend returns JSON responses with appropriate HTTP status codes. Exact response fields vary by controller.
-
-Common status-code categories used or expected by the API:
+The backend returns JSON responses with status codes for validation and server errors.
 
 | Status | Meaning |
 | --- | --- |
 | `200` | Successful request |
-| `201` | Successful creation |
-| `400` | Invalid or missing request data |
-| `401` | Authentication or password verification failure |
+| `201` | Resource created |
+| `400` | Missing or invalid input |
+| `401` | Invalid password or unauthorized action |
 | `404` | Resource not found |
-| `409` | Conflict, such as duplicate email or existing company settings |
+| `409` | Duplicate or conflicting data |
 | `500` | Internal server error |
-| `502` | Email provider rejected a reset email |
 
-## Error Handling
+---
 
-The controllers currently handle common errors directly with `try/catch` blocks and JSON responses.
+## Security Considerations
 
-Error-handling responsibilities include:
+- Hash administrator passwords before storing them.
+- Keep `JWT_SECRET` private.
+- Keep MongoDB credentials private.
+- Validate all request data on the server.
+- Avoid returning password hashes to the frontend.
+- Restrict CORS origins before production deployment.
+- Add JWT middleware to sensitive backend routes if not already present.
+- Do not trust only frontend route protection for backend security.
 
-- Missing required fields
-- Invalid MongoDB Object IDs
-- Duplicate administrator email
-- Existing company settings conflict
-- Invalid login credentials
-- Invalid or expired password reset token
-- Missing company settings or quotations
-- Database errors
-- Email provider failures
-- Internal server errors
+---
 
-Centralized Express error middleware is not currently shown in the repository.
+## CORS Configuration
 
-## Security
+The backend enables CORS so the React frontend can call the API. For production, configure CORS to allow only trusted frontend origins instead of allowing every origin.
 
-Confirmed security-related behavior:
-
-- Passwords are hashed with `bcrypt`.
-- Login generates a JWT signed with `JWT_SECRET`.
-- Password reset tokens are generated with `crypto.randomBytes`.
-- MongoDB schema validation is used for several fields.
-- CORS is enabled for frontend communication.
-- Uploaded company logos are restricted to JPG, JPEG, PNG, and WEBP.
-- Upload size is limited to 5 MB.
-- Sensitive configuration is loaded from environment variables.
-
-Recommended security improvements:
-
-- Add JWT verification middleware to sensitive API routes.
-- Validate authorization server-side instead of relying only on `admin_id` in request bodies.
-- Restrict CORS to trusted frontend origins in production.
-- Avoid returning sensitive fields such as password hashes in admin responses.
-- Add safe, consistent error responses.
-- Add rate limiting for authentication endpoints.
-- Add security headers with middleware such as Helmet.
-
-## PDF Generation
-
-`pdfkit` is installed and imported in the quotation controller, but the current router does not expose a dedicated backend PDF generation endpoint. The frontend currently handles quotation PDF download with `html2pdf.js`.
-
-When backend PDF generation is implemented or exposed, a quotation PDF should include:
-
-- Company details
-- Customer details
-- Quotation items
-- Quantity
-- Price
-- Totals
-- Terms and conditions
-- Authorized signature when available
-
-## WhatsApp Support
-
-The backend stores and returns quotation data that the frontend can use for WhatsApp sharing. The current source does not show direct WhatsApp Business API integration or direct message sending from the backend.
-
-Current support is best described as:
-
-- Providing quotation data for shareable messages
-- Supporting customer contact data in quotation records
-- Allowing the frontend to create quotation share links
-
-## Uploads Directory
-
-The backend serves uploaded files from `/uploads` and stores company logo files in an `uploads/` directory through Multer. If the directory is not present locally, create it before testing company logo uploads.
-
-The exact file-storage strategy should be reviewed before production deployment, especially if the server filesystem is temporary or multiple instances are used.
+---
 
 ## API Testing
 
-You can test the API with:
+Recommended tools:
 
 - Postman
-- Insomnia
-- `curl`
+- Thunder Client
 
-No automated test files are currently present in the backend folder. Add tests before relying on the API for production workflows.
+Test these flows before a demo:
 
-## Deployment
+- Register
+- Login
+- Create company settings
+- Create quotation
+- Retrieve quotations
+- Update draft quotation
+- Delete quotation
+- Dashboard summary
 
-Platform-neutral deployment checklist:
+---
 
-1. Configure production environment variables.
-2. Connect the production MongoDB database.
-3. Install dependencies.
-4. Start the Node.js server using the configured production command.
-5. Configure allowed frontend origins in CORS.
-6. Verify uploaded file storage for company logos.
-7. Test authentication, password reset, company settings, dashboard, and quotation routes.
+## Deployment Guidance
+
+1. Set production environment variables.
+2. Connect a production MongoDB database.
+3. Install backend dependencies.
+4. Start the server with the production command.
+5. Configure CORS for the deployed frontend.
+6. Verify uploaded-file behavior.
+7. Test all authentication and quotation endpoints.
 8. Use HTTPS in production.
-9. Confirm frontend `VITE_API_URL` points to the deployed backend API.
 
-## Performance Considerations
-
-Recommended considerations:
-
-- Keep MongoDB queries efficient.
-- Continue using pagination for quotation lists.
-- Add database indexes for frequently searched fields where needed.
-- Avoid transferring unnecessary data to the frontend.
-- Clean temporary or unused upload files.
-- Handle asynchronous errors consistently.
-- Review aggregation performance for dashboard metrics as data volume grows.
+---
 
 ## Troubleshooting
 
-| Issue | Possible Fix |
+| Issue | Fix |
 | --- | --- |
-| MongoDB connection failure | Check `MONGO_URL`, database availability, network access, and MongoDB Atlas IP allowlist settings |
-| Invalid JWT token | Confirm `JWT_SECRET` is configured and the token has not expired |
-| Missing environment variables | Create `backend/.env` and restart the server |
-| CORS errors | Configure CORS for the deployed frontend origin |
-| Port already in use | Change `PORT` in `.env` or stop the process using the current port |
-| Frontend unable to reach API | Verify the backend is running and frontend `VITE_API_URL` points to `/api` |
-| Company logo upload fails | Confirm `uploads/` exists, file type is supported, and file size is under 5 MB |
-| Forgot password email fails | Check `EMAIL_USER`, `EMAIL_PASS`, and email provider app-password settings |
-| PDF generation failure | Verify whether PDF generation is handled by the frontend or an implemented backend route |
-| WhatsApp share link not opening | Check frontend share-link generation and customer contact data |
-| Development server not starting | Run `npm install`, verify `.env`, and inspect terminal errors |
+| Server does not start | Run `npm install` and check `.env` |
+| MongoDB connection fails | Verify `MONGO_URL` and database network access |
+| JWT errors | Confirm `JWT_SECRET` is set |
+| API returns validation errors | Check required request fields |
+| CORS errors | Allow the frontend origin in backend CORS configuration |
+| Logo upload fails | Confirm file type, file size, and upload folder behavior |
+| Quotation update fails | Confirm the quotation exists and is in draft status |
+
+---
 
 ## Future Improvements
 
-These are roadmap ideas, not current feature claims:
-
-- Server-side JWT authorization middleware
-- API pagination improvements
-- Advanced search and filtering
+- JWT authorization middleware
 - Swagger or OpenAPI documentation
-- Automated unit and integration testing
-- Rate limiting
-- Helmet security headers
-- Refresh tokens
-- Role-based authorization
-- Activity logging
-- Email quotation sharing
-- Backend PDF generation endpoint
-- Cloud storage for uploaded logos and generated PDFs
+- Automated tests
+- Pagination improvements
+- Advanced status filters
+- Email sharing
+- Cloud file storage
+- Role-based access
+- Activity logs
+- Notifications
 - Docker support
 - CI/CD pipeline
+
+---
 
 ## Contributing
 
 1. Fork the repository.
-2. Create a feature branch.
-3. Make focused changes.
-4. Test the API.
+2. Create a backend feature branch.
+3. Make focused API changes.
+4. Test affected endpoints.
 5. Commit with a clear message.
 6. Push the branch.
 7. Open a pull request.
 
-## Author
-
-**JP**  
-Backend Developer / MERN Stack Developer
-
-- GitHub: `<github-profile-url>`
-- LinkedIn: `<linkedin-profile-url>`
-- Portfolio: `<portfolio-url>`
-- Email: `<email-address>`
+---
 
 ## License
 
-This project is currently intended for educational and portfolio purposes unless a repository license file specifies otherwise. Do not assume a license until one is included in the project.
+![MIT License](https://img.shields.io/github/license/jigarpandav/Quotivra)
 
 ---
 
-Built with Node.js, Express.js, and MongoDB to make quotation management secure, fast, and reliable. If this project helps you, consider starring the repository.
+## Author
+
+**Jigar Pandav**  
+Frontend Developer / MERN Stack Developer
+
+- GitHub: `https://github.com/jigarpandav`
+- LinkedIn: `www.linkedin.com/in/jigar-pandav-a098bb298`
+- Email: `jigarpandav342005@gmail.com`

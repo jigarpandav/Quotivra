@@ -11,9 +11,10 @@ Quotivra is the frontend application for a Smart Quotation Management System. It
 [![React Router](https://img.shields.io/badge/React_Router-CA4245?style=for-the-badge&logo=reactrouter&logoColor=FFFFFF)](https://reactrouter.com/)
 [![Axios](https://img.shields.io/badge/Axios-5A29E4?style=for-the-badge)](https://axios-http.com/)
 [![Responsive](https://img.shields.io/badge/Responsive-Ready-16A34A?style=for-the-badge)](#responsive-design)
+![MIT License](https://img.shields.io/github/license/jigarpandav/Quotivra)
 
-**Repository:** `<frontend-repository-url>`  
-**Live Demo:** `<live-demo-url>`
+**Repository:** `https://github.com/jigarpandav/Quotivra/tree/main/frontend`  
+**Live Demo:** `https://quotivra.vercel.app/`
 
 ## Table of Contents
 
@@ -49,6 +50,22 @@ Quotivra - Frontend is a React and Vite application for managing business quotat
 The frontend communicates with the backend API through Axios. Backend configuration is handled through Vite environment variables, with `VITE_API_URL` used as the API base URL. The interface focuses on speed and simplicity so administrators can move quickly from customer entry to quotation creation, PDF generation, and sharing.
 
 ## Key Features
+
+- 🔐 Secure Admin Authentication (Register & Login)
+- 🛡️ JWT-Based Authentication & Authorization
+- 📊 Dashboard with Quotation Statistics
+- 📝 Create Professional Quotations
+- 👤 Enter Customer Details Directly While Creating a Quotation
+- 📦 Add Multiple Products Dynamically
+- 🧮 Automatic Quantity & Total Amount Calculation
+- ✏️ Update Existing Quotations
+- 👀 View Complete Quotation Details
+- 🗑️ Delete Quotations
+- 🏢 Manage Company Information
+- 📄 Generate Professional PDF Quotations
+- 💬 Share Quotations via WhatsApp
+- 📱 Fully Responsive User Interface
+- ⚡ Fast & Clean User Experience
 
 ### Authentication
 
@@ -113,19 +130,39 @@ The frontend communicates with the backend API through Axios. Backend configurat
 
 ## Application Workflow
 
-```mermaid
-flowchart TD
-    A[Register or Login] --> B[Dashboard]
-    B --> C[Configure Company Settings]
-    B --> D[Create Quotation]
-    D --> E[Enter Customer Details]
-    E --> F[Add Product Rows]
-    F --> G[Calculate Totals]
-    G --> H[Save Quotation]
-    H --> I[View or Update Quotation]
-    I --> J[Generate PDF]
-    J --> K[Share via WhatsApp]
-```
+                🚀 Start
+                    │
+                    ▼
+            🔐 Login / Register
+                    │
+                    ▼
+              📊 Dashboard
+             ┌──────┴──────┐
+             │             │
+             ▼             ▼
+   🏢 Company Setup    📝 Create Quotation
+             │             │
+             ▼             ▼
+      💾 Save Info    👤 Customer Details
+                            │
+                            ▼
+                    📦 Add Products
+                            │
+                            ▼
+                 🧮 Calculate Total
+                            │
+                            ▼
+                    💾 Save Quotation
+                            │
+                            ▼
+                   📋 Manage Quotations
+        ┌──────────┼──────────┬──────────┬──────────┐
+        ▼          ▼          ▼          ▼          ▼
+     👁️ View   ✏️ Edit   📄 PDF   🖨️ Print   💬 WhatsApp
+        └──────────┴──────────┴──────────┴──────────┘
+                            │
+                            ▼
+                      ✅ Complete
 
 ## Technology Stack
 
@@ -207,7 +244,7 @@ Use the versions supported by the current `package.json` dependencies and your l
 ## Installation
 
 ```bash
-git clone <frontend-repository-url>
+git clone https://github.com/jigarpandav/Quotivra/tree/main/frontend
 cd frontend
 npm install
 ```
@@ -291,14 +328,43 @@ Endpoint details should be maintained in the application code and backend docume
 
 ## Authentication Flow
 
-```mermaid
-flowchart LR
-    A[Register or Login] --> B[Backend Authentication API]
-    B --> C[JWT Token]
-    C --> D[Frontend Session]
-    D --> E[Protected Routes]
-    E --> F[Authenticated API Requests]
-```
+            Start
+              │
+              ▼
+            Login / Register
+              │
+            Authenticate User
+              │
+            MongoDB
+              │
+            Valid User?
+            ┌─┴─────────┐
+            │           │
+            No          Yes
+            │           │
+            Retry     Generate JWT
+                        │
+                        ▼
+                    Dashboard
+                    ┌─────┴─────┐
+                    │           │
+            Company Setup   Create Quotation
+                                │
+                      Customer Details
+                                │
+                         Add Products
+                                │
+                         Calculate Total
+                                │
+                         Save Quotation
+                                │
+                         Manage Quotations
+                  ┌─────┬─────┬─────┬─────┐
+                  ▼     ▼     ▼     ▼     ▼
+                 View  Edit   PDF  Print WhatsApp
+                                │
+                                ▼
+                            Complete
 
 The current protected route check reads the authentication token from `localStorage`. If no token is found, protected pages redirect to the login page.
 
@@ -323,14 +389,14 @@ Update these paths after adding screenshots to the project.
 
 | Screen | Preview |
 | --- | --- |
-| Login | ![Login Screenshot](./docs/screenshots/login.png) |
-| Register | ![Register Screenshot](./docs/screenshots/register.png) |
-| Dashboard | ![Dashboard Screenshot](./docs/screenshots/dashboard.png) |
-| Company Settings | ![Company Settings Screenshot](./docs/screenshots/company-settings.png) |
-| Create Quotation | ![Create Quotation Screenshot](./docs/screenshots/create-quotation.png) |
-| View Quotation | ![View Quotation Screenshot](./docs/screenshots/view-quotation.png) |
-| PDF Preview | ![PDF Preview Screenshot](./docs/screenshots/pdf-preview.png) |
-| Mobile View | ![Mobile View Screenshot](./docs/screenshots/mobile-view.png) |
+| Login | ![Login Screenshot](./docs/screenshots/login_page.png) |
+| Register | ![Register Screenshot](./docs/screenshots/register-page.png) |
+| Dashboard | ![Dashboard Screenshot](./docs/screenshots/dashboard-page.png) |
+| Company Settings | ![Company Settings Screenshot](./docs/screenshots/add-company-setting-page.png) |
+| Create Quotation | ![Create Quotation Screenshot](./docs/screenshots/create-quotation-page.png) |
+| View Quotation | ![View Quotation Screenshot](./docs/screenshots/view-quotation-page.png) |
+| PDF Preview | ![PDF Preview Screenshot](./docs/screenshots/quotation-pdf-preview-page.png) |
+| Responsive  | ![Responsive View Screenshot](./docs/screenshots/responsive.png) |
 
 ## Deployment
 
@@ -402,17 +468,16 @@ These are roadmap ideas, not current feature claims:
 
 ## Author
 
-**JP**  
+**Jigar Pandav**  
 Frontend Developer / MERN Stack Developer
 
-- GitHub: `<github-profile-url>`
-- LinkedIn: `<linkedin-profile-url>`
-- Portfolio: `<portfolio-url>`
-- Email: `<email-address>`
+- GitHub: `https://github.com/jigarpandav`
+- LinkedIn: `www.linkedin.com/in/jigar-pandav-a098bb298`
+- Email: `jigarpandav342005@gmail.com`
 
 ## License
 
-Add or update the license section based on the repository's actual license file. Do not assume a license until one is included in the project.
+![MIT License](https://img.shields.io/github/license/jigarpandav/Quotivra)
 
 ---
 
