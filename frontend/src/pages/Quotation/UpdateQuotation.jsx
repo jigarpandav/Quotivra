@@ -251,13 +251,19 @@ const UpdateQuotation = () => {
   };
 
   const removeItem = (index) => {
-    if (formData.items.length === 1) {
-      setError("At least one product is required");
-      return;
-    }
-
     const updatedItems = formData.items.filter((_, i) => i !== index);
+    const nextEditingIndex =
+      editingItemIndex === index
+        ? null
+        : editingItemIndex > index
+          ? editingItemIndex - 1
+          : editingItemIndex;
+
     setFormData({ ...formData, items: updatedItems });
+    setEditingItemIndex(nextEditingIndex);
+    if (editingItemIndex === index) {
+      setDraftItem(emptyItem);
+    }
     setFieldErrors({});
     setError("");
   };
