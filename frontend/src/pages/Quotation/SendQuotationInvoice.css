@@ -85,9 +85,17 @@
   text-align: right;
 }
 
+.quotation-sheet .table-responsive {
+  width: 100%;
+  overflow-x: visible;
+}
+
 .quotation-table {
   border: 1px solid #9ca3af;
+  border-collapse: collapse;
   color: #111827;
+  table-layout: fixed;
+  width: 100%;
   min-width: 0;
 }
 
@@ -108,19 +116,30 @@
 
 .quotation-table th:nth-child(1),
 .quotation-table td:nth-child(1) {
-  width: 45px;
+  width: 48px;
+  text-align: center;
+}
+
+.quotation-table th:nth-child(2),
+.quotation-table td:nth-child(2) {
+  width: 40%;
+}
+
+.quotation-table th:nth-child(3),
+.quotation-table td:nth-child(3) {
+  width: 90px;
   text-align: center;
 }
 
 .quotation-table th:nth-child(4),
 .quotation-table td:nth-child(4) {
-  text-align: center;
+  width: 140px;
+  text-align: right;
 }
 
 .quotation-table th:nth-child(5),
-.quotation-table td:nth-child(5),
-.quotation-table th:nth-child(6),
-.quotation-table td:nth-child(6) {
+.quotation-table td:nth-child(5) {
+  width: 140px;
   text-align: right;
 }
 
@@ -631,6 +650,7 @@
   .quotation-table {
     width: 100% !important;
     border-collapse: collapse !important;
+    table-layout: fixed !important;
   }
 
   .quotation-sheet .table-responsive {
@@ -797,6 +817,7 @@
   .quotation-table {
     width: 100% !important;
     min-width: 0 !important;
+    table-layout: fixed !important;
   }
 
   .quotation-table th,
@@ -839,5 +860,144 @@
   .quotation-sign-box .signature {
     margin-top: 1.2rem !important;
     font-size: 22px !important;
+  }
+}
+
+.quotation-sheet,
+.quotation-sheet * {
+  box-sizing: border-box;
+}
+
+.quotation-sheet .table-responsive {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  overflow: visible;
+}
+
+.quotation-sheet .quotation-table {
+  display: table;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.quotation-sheet .quotation-table col.quotation-col-index {
+  width: 7%;
+}
+
+.quotation-sheet .quotation-table col.quotation-col-item {
+  width: 40%;
+}
+
+.quotation-sheet .quotation-table col.quotation-col-qty {
+  width: 13%;
+}
+
+.quotation-sheet .quotation-table col.quotation-col-price {
+  width: 20%;
+}
+
+.quotation-sheet .quotation-table col.quotation-col-amount {
+  width: 20%;
+}
+
+.quotation-sheet .quotation-table thead {
+  display: table-header-group;
+}
+
+.quotation-sheet .quotation-table tbody {
+  display: table-row-group;
+}
+
+.quotation-sheet .quotation-table tr {
+  display: table-row;
+}
+
+.quotation-sheet .quotation-table th,
+.quotation-sheet .quotation-table td {
+  display: table-cell;
+  vertical-align: middle;
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+.quotation-sheet .quotation-table th:nth-child(1),
+.quotation-sheet .quotation-table td:nth-child(1),
+.quotation-sheet .quotation-table th:nth-child(3),
+.quotation-sheet .quotation-table td:nth-child(3) {
+  text-align: center;
+}
+
+.quotation-sheet .quotation-table th:nth-child(4),
+.quotation-sheet .quotation-table td:nth-child(4),
+.quotation-sheet .quotation-table th:nth-child(5),
+.quotation-sheet .quotation-table td:nth-child(5) {
+  text-align: right;
+}
+
+.quotation-sheet .quotation-total-row td:first-child {
+  text-align: center;
+}
+
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 8mm;
+  }
+
+  html,
+  body,
+  #root {
+    width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #fff !important;
+  }
+
+  #quotation-pdf {
+    position: static !important;
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 1px solid #9ca3af !important;
+  }
+
+  .quotation-sheet .table-responsive,
+  .quotation-sheet .quotation-table {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    overflow: visible !important;
+  }
+
+  .quotation-sheet .quotation-table col.quotation-col-index {
+    width: 7% !important;
+  }
+
+  .quotation-sheet .quotation-table col.quotation-col-item {
+    width: 40% !important;
+  }
+
+  .quotation-sheet .quotation-table col.quotation-col-qty {
+    width: 13% !important;
+  }
+
+  .quotation-sheet .quotation-table col.quotation-col-price,
+  .quotation-sheet .quotation-table col.quotation-col-amount {
+    width: 20% !important;
+  }
+
+  .quotation-sheet .quotation-table th,
+  .quotation-sheet .quotation-table td {
+    height: auto !important;
+    padding: 6px 8px !important;
+    line-height: 1.25 !important;
+    vertical-align: middle !important;
   }
 }

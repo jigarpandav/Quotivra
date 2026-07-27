@@ -384,6 +384,13 @@ function handlePrint() {
 
           <div className="table-responsive">
             <table className="quotation-table">
+              <colgroup>
+                <col className="quotation-col-index" />
+                <col className="quotation-col-item" />
+                <col className="quotation-col-qty" />
+                <col className="quotation-col-price" />
+                <col className="quotation-col-amount" />
+              </colgroup>
               <thead>
                 <tr>
                   <th>#</th>
