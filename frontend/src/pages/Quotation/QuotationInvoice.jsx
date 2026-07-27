@@ -8,13 +8,14 @@ import formatCurrency from "../../utils/formatCurrency";
 import toWords from "../../utils/nubertoWord"
 import html2pdf from "html2pdf.js";
 import { toast } from "react-toastify";
-import { FaWhatsapp } from "react-icons/fa";
+import { FaEdit, FaTrash, FaWhatsapp } from "react-icons/fa";
 import { TbDownloadFilled } from "react-icons/tb";
 import { MdCancel } from "react-icons/md";
 import { BiPrinter } from "react-icons/bi";
 // import { useReactToPrint } from "react-to-print";
 import { FaPrint } from "react-icons/fa";
 import { useRef } from "react";
+import ConfirmationModal from "../../components/ConfirmationModal/ConfirmationModal";
 
 const getPublicQuotationUrl = (quotationId) => {
   const siteUrl = import.meta.env.VITE_PUBLIC_SITE_URL || window.location.origin;
@@ -31,12 +32,14 @@ const QuotationInvoice = () => {
     const [company, setCompany] = React.useState({});
     const[quotationItems, setQuotationItems] = React.useState([]);
     const [admin, setAdmin] = React.useState({});
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = React.useState(false);
+    const [deleteLoading, setDeleteLoading] = React.useState(false);
     const printRef = useRef();
 
     const BASE_URL = import.meta.env.VITE_LOGO_URL;
 
 
-    const handleGetQuotation = () => {
+    const handleGetQuotation = React.useCallback(() => {
         api.post("quotation/id",{
             quotation_id: id,
         }).then((res) => {
@@ -49,9 +52,9 @@ const QuotationInvoice = () => {
             }
 
         })
-    }
+    }, [id])
 
-    const handlegetCompanySettings = () => {
+    const handlegetCompanySettings = React.useCallback(() => {
         api.post("/company-settings",{
             admin_id: Adminid
     }).then((res) => {
@@ -61,9 +64,9 @@ const QuotationInvoice = () => {
            setCompany(companySettings)
         }
     })
-}
+}, [Adminid])
 
-const handleAdmin = () => {
+const handleAdmin = React.useCallback(() => {
     api.post("/admin", {
         admin_id: Adminid
     }).then((res) => {
@@ -74,12 +77,12 @@ const handleAdmin = () => {
           
         }
     })
-}
+}, [Adminid])
     React.useEffect(() => {
         handleGetQuotation();
         handlegetCompanySettings();
         handleAdmin();
-    }, []);
+    }, [handleGetQuotation, handlegetCompanySettings, handleAdmin]);
 
 const quotation = {
   company: {
@@ -136,6 +139,38 @@ const totalQty = quotation.items.reduce(
 function handleCancel() {
     navigate("/quotations/view")
 }
+
+function handleEdit() {
+  navigate(`/update-quotation/${id}`);
+}
+
+function handleDelete() {
+  setIsDeleteModalOpen(true);
+}
+
+function closeDeleteModal() {
+  if (deleteLoading) return;
+
+  setIsDeleteModalOpen(false);
+}
+
+const confirmDelete = async () => {
+  try {
+    setDeleteLoading(true);
+
+    const response = await api.post("/quotation/delete", {
+      quotation_id: id,
+    });
+
+    toast.success(response.data?.message || "Quotation deleted successfully");
+    navigate("/quotations/view");
+  } catch (err) {
+    toast.error(err.response?.data?.message || "Unable to delete quotation");
+  } finally {
+    setDeleteLoading(false);
+    setIsDeleteModalOpen(false);
+  }
+};
 
 
 const handleDownloadPDF = async () => {
@@ -221,6 +256,16 @@ function handlePrint() {
 }
 
   return (
+    <>
+    <ConfirmationModal
+      isOpen={isDeleteModalOpen}
+      onClose={closeDeleteModal}
+      onConfirm={confirmDelete}
+      title="Delete Quotation"
+      message="Are you sure you want to delete this quotation? This action cannot be undone."
+      loading={deleteLoading}
+    />
+
     <div className="view-quotation-page page">
       <div className="container">
         <div className="view-quotation-actions">
@@ -258,12 +303,26 @@ function handlePrint() {
     <FaWhatsapp  className="text-lg h-14 w-6  text-white  py-3" />
     <span className="font-medium">Send WhatsApp</span>
   </button>
-<button
-  className="btn btn-primary quotation-pdf"
-  onClick={handlePrint}
->
-  <FaPrint /> Print
-</button>
+  <button
+    className="btn btn-primary quotation-pdf"
+    onClick={handlePrint}
+  >
+    <FaPrint /> Print
+  </button>
+
+  <button
+    className="btn btn-primary quotation-pdf"
+    onClick={handleEdit}
+  >
+    <FaEdit /> Edit
+  </button>
+
+  <button
+    className="btn btn-danger quotation-pdf"
+    onClick={handleDelete}
+  >
+    <FaTrash /> Delete
+  </button>
 
   {/* Cancel */}
   <button
@@ -451,6 +510,7 @@ function handlePrint() {
         </div>
       </div>
     </div>
+    </>
   )
 };
 

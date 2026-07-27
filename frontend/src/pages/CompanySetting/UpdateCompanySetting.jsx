@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   FaBuilding,
   FaPhone,
@@ -46,7 +46,7 @@ const UpdateCompanySetting = () => {
     }
   };
 
-  const handlegetCompanySettings = async () => {
+  const handlegetCompanySettings = useCallback(async () => {
     try {
       const res = await api.post("/company-settings", {
         admin_id: Adminid,
@@ -92,12 +92,15 @@ const UpdateCompanySetting = () => {
         err.response?.data?.message || "Failed to load company settings"
       );
     }
-  };
+  }, [Adminid, BASE_URL]);
 
   useEffect(() => {
-    handlegetCompanySettings();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    const timer = setTimeout(() => {
+      handlegetCompanySettings();
+    }, 0);
+
+    return () => clearTimeout(timer);
+  }, [handlegetCompanySettings]);
 
   const handleLogoChange = (e) => {
     const file = e.target.files?.[0];

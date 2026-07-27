@@ -22,7 +22,7 @@ const Dashboard = () => {
   const [dashboardData, setDashboardData] = React.useState({});
   const [recentQuotations, setRecentQuotations] = React.useState([]);
 
-  const getDashboardData = ()  => {
+  const getDashboardData = React.useCallback(()  => {
     api.post("/dashboard",{
       admin_id:Adminid}).then((res) => {
         if(res.status === 200){
@@ -31,11 +31,11 @@ const Dashboard = () => {
           setRecentQuotations(data.recentQuotations);
         }
       })
-  }
+  }, [Adminid])
    
   React.useEffect(() => {
     getDashboardData();
-  },[Adminid])
+  },[getDashboardData])
 
   const stats = {
     totalQuotations: dashboardData.totalQuotations || 0,
@@ -153,7 +153,7 @@ const Dashboard = () => {
             style={{
               height: `${Math.max(revenue / 100, 5)}px`,
             }}
-            title={`₹${revenue}`}
+            title={formatCurrency(revenue)}
           ></div>
           <span>{month}</span>
         </div>
@@ -220,7 +220,7 @@ const Dashboard = () => {
                         <Link className="view-quotations-action view" to={`/quotations/invoice/${quotation._id}`}>
                           <FaEye />
                         </Link>
-                        <Link className="view-quotations-action edit" to={`/update-Quotation/${quotation._id}`}>
+                        <Link className="view-quotations-action edit" to={`/update-quotation/${quotation._id}`}>
                           <FaEdit />
                         </Link>
                       </div>

@@ -29,7 +29,7 @@ const SendQuotationInvoice = () => {
     const BASE_URL = import.meta.env.VITE_LOGO_URL;
 
 
-    const handleGetQuotation = () => {
+    const handleGetQuotation = React.useCallback(() => {
         api.post("quotation/id",{
             quotation_id: id,
         }).then((res) => {
@@ -42,9 +42,9 @@ const SendQuotationInvoice = () => {
             }
 
         })
-    }
+    }, [id])
 
-    const handlegetCompanySettings = () => {
+    const handlegetCompanySettings = React.useCallback(() => {
         api.post("/company-settings",{
             admin_id: Adminid
     }).then((res) => {
@@ -54,9 +54,9 @@ const SendQuotationInvoice = () => {
            setCompany(companySettings)
         }
     })
-}
+}, [Adminid])
 
-const handleAdmin = () => {
+const handleAdmin = React.useCallback(() => {
     api.post("/admin", {
         admin_id: Adminid
     }).then((res) => {
@@ -67,12 +67,12 @@ const handleAdmin = () => {
           
         }
     })
-}
+}, [Adminid])
     React.useEffect(() => {
         handleGetQuotation();
         handlegetCompanySettings();
         handleAdmin();
-    }, []);
+    }, [handleGetQuotation, handlegetCompanySettings, handleAdmin]);
 
 const quotation = {
   company: {

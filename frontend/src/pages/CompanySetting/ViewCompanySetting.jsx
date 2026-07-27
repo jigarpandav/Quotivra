@@ -24,7 +24,7 @@ const ViewCompanySetting = () => {
 
     const BASE_URL = import.meta.env.VITE_LOGO_URL;
 
-    const handlegetCompanySettings = () => {
+    const handlegetCompanySettings = React.useCallback(() => {
         api.post("/company-settings",{
             admin_id: Adminid
     }).then((res) => {
@@ -35,8 +35,8 @@ const ViewCompanySetting = () => {
            setCompany(companySettings)
         }
     })
-}
-const handleAdmin = () => {
+}, [Adminid])
+const handleAdmin = React.useCallback(() => {
     api.post("/admin", {
         admin_id: Adminid
     }).then((res) => {
@@ -47,12 +47,12 @@ const handleAdmin = () => {
           
         }
     })
-}
+}, [Adminid])
 
 React.useEffect(() => {
     handlegetCompanySettings();
     handleAdmin();
-},[Adminid]);
+},[handlegetCompanySettings, handleAdmin]);
 
 function handleUpdateCompanySettings(companyId) {
     navigate(`/company-settings/${companyId}`);
@@ -84,7 +84,7 @@ function handleUpdateCompanySettings(companyId) {
 
           <div className="company-breadcrumb">
             <span onClick={() => navigate("/dashboard")}>Dashboard</span>
-            <span>›</span>
+            <span>&gt;</span>
             
            
             <span className="active">Company Settings</span>

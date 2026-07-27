@@ -114,6 +114,13 @@ const AppRoutes = () => {
             <UpdateQuotation />
           </ProtectedRoute>
         }/>
+        <Route
+        path="/update-quotation/:id"
+        element={
+          <ProtectedRoute>
+            <UpdateQuotation />
+          </ProtectedRoute>
+        }/>
 
         <Route path="/forgot-password" element={<ForgotPassword />} />
          <Route path="/reset-password/:token" element={<ResetPassword />} />

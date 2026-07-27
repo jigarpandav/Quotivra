@@ -5,6 +5,7 @@ import {
   FaBox,
   FaRupeeSign,
   FaPlus,
+  FaEdit,
   FaTrash,
   FaSave,
   FaUndo,
@@ -17,20 +18,37 @@ import {
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import api from "../../axios";
+import formatCurrency from "../../utils/formatCurrency";
 
 import "./Quotation.css";
 
+const emptyItem = {
+  product_name: "",
+  price: "",
+  quantity: "",
+};
+
 const Quotation = () => {
   const navigate = useNavigate();
+
+  const preserveScrollPosition = () => {
+    const currentScrollY = window.scrollY;
+
+    requestAnimationFrame(() => {
+      window.scrollTo({ top: currentScrollY, behavior: "auto" });
+    });
+  };
 
   const initialData = {
     customer_name: "",
     customer_contact: "",
     status: "draft",
-    items: [{ product_name: "", price: "", quantity: "" }],
+    items: [],
   };
 
   const [formData, setFormData] = useState(initialData);
+  const [draftItem, setDraftItem] = useState(emptyItem);
+  const [editingItemIndex, setEditingItemIndex] = useState(null);
   const [error, setError] = useState("");
   const [fieldErrors, setFieldErrors] = useState({});
   const [loading, setLoading] = useState(false);
@@ -136,26 +154,74 @@ const Quotation = () => {
     setFieldErrors({ ...fieldErrors, [name]: "" });
   };
 
-  const handleItemChange = (index, e) => {
+  const handleDraftItemChange = (e) => {
     const { name, value } = e.target;
 
     if ((name === "price" || name === "quantity") && Number(value) < 0) {
       return;
     }
 
-    const updatedItems = [...formData.items];
-    updatedItems[index][name] = value;
-
-    setFormData({ ...formData, items: updatedItems });
-    setFieldErrors({ ...fieldErrors, [`items.${index}.${name}`]: "" });
+    setDraftItem({ ...draftItem, [name]: value });
+    setFieldErrors({ ...fieldErrors, [`draftItem.${name}`]: "" });
   };
 
   const addItem = () => {
+    const nextFieldErrors = {};
+
+    if (!draftItem.product_name.trim()) {
+      nextFieldErrors["draftItem.product_name"] = "Product name is required";
+    }
+
+    if (!draftItem.price || Number(draftItem.price) <= 0) {
+      nextFieldErrors["draftItem.price"] = "Valid price is required";
+    }
+
+    if (!draftItem.quantity || Number(draftItem.quantity) <= 0) {
+      nextFieldErrors["draftItem.quantity"] = "Valid quantity is required";
+    }
+
+    if (Object.keys(nextFieldErrors).length > 0) {
+      setFieldErrors({ ...fieldErrors, ...nextFieldErrors });
+      setError("Please fix the highlighted fields.");
+      return;
+    }
+
+    const nextItem = {
+      product_name: draftItem.product_name.trim(),
+      price: draftItem.price,
+      quantity: draftItem.quantity,
+    };
+
+    const updatedItems = [...formData.items];
+
+    if (editingItemIndex === null) {
+      updatedItems.push(nextItem);
+    } else {
+      updatedItems[editingItemIndex] = nextItem;
+    }
+
     setFormData({
       ...formData,
-      items: [...formData.items, { product_name: "", price: "", quantity: "" }],
+      items: updatedItems,
     });
+    setDraftItem(emptyItem);
+    setEditingItemIndex(null);
     setError("");
+    setFieldErrors({});
+    preserveScrollPosition();
+  };
+
+  const startEditItem = (index) => {
+    const item = formData.items[index];
+
+    setDraftItem({
+      product_name: item.product_name,
+      price: item.price,
+      quantity: item.quantity,
+    });
+    setEditingItemIndex(index);
+    setError("");
+    setFieldErrors({});
   };
 
   const removeItem = (index) => {
@@ -165,13 +231,26 @@ const Quotation = () => {
     }
 
     const updatedItems = formData.items.filter((_, i) => i !== index);
+    const nextEditingIndex =
+      editingItemIndex === index
+        ? null
+        : editingItemIndex > index
+          ? editingItemIndex - 1
+          : editingItemIndex;
+
     setFormData({ ...formData, items: updatedItems });
+    setEditingItemIndex(nextEditingIndex);
+    if (editingItemIndex === index) {
+      setDraftItem(emptyItem);
+    }
     setFieldErrors({});
     setError("");
   };
 
   const handleReset = () => {
     setFormData(initialData);
+    setDraftItem(emptyItem);
+    setEditingItemIndex(null);
     setError("");
     setFieldErrors({});
   };
@@ -294,101 +373,185 @@ const Quotation = () => {
             </div>
           </div>
 
-          <div className="quotation-card card">
-            <div className="quotation-card-header">
-              <h2>Product Details</h2>
+          <div className="quotation-card card quotation-builder-card">
+            <div className="quotation-builder-header">
+              <div>
+                <p className="quotation-step-label">Quotation Builder</p>
+                <h2>{editingItemIndex === null ? "Add Product Item" : "Edit Product Item"}</h2>
+                <p>Select product and add quantity to this order</p>
+              </div>
 
-              <button type="button" className="add-item-btn" onClick={addItem}>
-                <FaPlus /> Add Product
-              </button>
+              <span className="quotation-step-pill">Step 2</span>
             </div>
 
-            <div className="quotation-items">
-              {formData.items.map((item, index) => (
-                <div className="quotation-item-row" key={index}>
-                  <div className="form-group">
-                    <label>Product Name *</label>
-                    <div className="quotation-input">
-                      <FaBox />
-                      <input
-                        type="text"
-                        name="product_name"
-                        placeholder="Product name"
-                        value={item.product_name}
-                        onChange={(e) => handleItemChange(index, e)}
-                      />
-                    </div>
-                    {fieldErrors[`items.${index}.product_name`] && (
-                      <span className="error">
-                        {fieldErrors[`items.${index}.product_name`]}
-                      </span>
-                    )}
-                  </div>
+            <div className="quotation-builder-grid">
+              <div className="form-group quotation-builder-field">
+                <label>Select Product</label>
+                <div className="quotation-input">
+                  <FaBox />
+                  <input
+                    type="text"
+                    name="product_name"
+                    placeholder="Search product..."
+                    value={draftItem.product_name}
+                    onChange={handleDraftItemChange}
+                  />
+                </div>
+                {fieldErrors["draftItem.product_name"] && (
+                  <span className="error">
+                    {fieldErrors["draftItem.product_name"]}
+                  </span>
+                )}
+              </div>
 
-                  <div className="form-group">
-                    <label>Price *</label>
-                    <div className="quotation-input">
-                      <FaRupeeSign />
-                      <input
-                        type="number"
-                        name="price"
-                        placeholder="Price"
-                        min="1"
-                        step="0.01"
-                        value={item.price}
-                        onChange={(e) => handleItemChange(index, e)}
-                      />
-                    </div>
-                    {fieldErrors[`items.${index}.price`] && (
-                      <span className="error">
-                        {fieldErrors[`items.${index}.price`]}
-                      </span>
-                    )}
-                  </div>
+              <div className="form-group quotation-builder-field">
+                <label>Unit Price</label>
+                <div className="quotation-input">
+                  <FaRupeeSign />
+                  <input
+                    type="number"
+                    name="price"
+                    placeholder="0"
+                    min="1"
+                    step="0.01"
+                    value={draftItem.price}
+                    onChange={handleDraftItemChange}
+                  />
+                </div>
+                {fieldErrors["draftItem.price"] && (
+                  <span className="error">{fieldErrors["draftItem.price"]}</span>
+                )}
+              </div>
 
-                  <div className="form-group">
-                    <label>Quantity *</label>
-                    <div className="quotation-input">
-                      <FaHashtag />
-                      <input
-                        type="number"
-                        name="quantity"
-                        placeholder="Quantity"
-                        min="1"
-                        value={item.quantity}
-                        onChange={(e) => handleItemChange(index, e)}
-                      />
-                    </div>
-                    {fieldErrors[`items.${index}.quantity`] && (
-                      <span className="error">
-                        {fieldErrors[`items.${index}.quantity`]}
-                      </span>
-                    )}
-                  </div>
+              <div className="form-group quotation-builder-field">
+                <label>Quantity</label>
+                <div className="quotation-input">
+                  <FaHashtag />
+                  <input
+                    type="number"
+                    name="quantity"
+                    placeholder="1"
+                    min="1"
+                    value={draftItem.quantity}
+                    onChange={handleDraftItemChange}
+                  />
+                </div>
+                {fieldErrors["draftItem.quantity"] && (
+                  <span className="error">
+                    {fieldErrors["draftItem.quantity"]}
+                  </span>
+                )}
+              </div>
 
-                  <div className="form-group">
-                    <label>Total</label>
-                    <div className="quotation-input quotation-total-input">
-                      <FaCalculator />
-                      <input
-                        type="text"
-                        value={
-                          Number(item.price || 0) * Number(item.quantity || 0)
-                        }
-                        readOnly
-                      />
-                    </div>
-                  </div>
+              <div className="form-group quotation-builder-field">
+                <label>Total</label>
+                <div className="quotation-input quotation-total-input">
+                  <FaCalculator />
+                  <input
+                    type="text"
+                    value={
+                      Number(draftItem.price || 0) * Number(draftItem.quantity || 0)
+                    }
+                    readOnly
+                  />
+                </div>
+              </div>
 
+              <div className="quotation-builder-actions">
+                {editingItemIndex !== null && (
                   <button
                     type="button"
-                    className="remove-item-btn"
-                    onClick={() => removeItem(index)}
+                    className="btn quotation-cancel-edit-btn"
+                    onClick={() => {
+                      setDraftItem(emptyItem);
+                      setEditingItemIndex(null);
+                      setFieldErrors({});
+                      setError("");
+                    }}
                   >
-                    <FaTrash />
+                    Cancel Edit
                   </button>
-                </div>
-              ))}
+                )}
+
+                <button type="button" className="add-item-btn" onClick={addItem}>
+                  {editingItemIndex !== null ? <FaEdit /> : <FaPlus />}
+                  {editingItemIndex !== null ? "Update Item" : "Add Item"}
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div className="quotation-card card quotation-items-card">
+            <div className="quotation-items-header">
+              <div>
+                <h2>Order Items</h2>
+                <p>Review all products before submitting order</p>
+              </div>
+
+              <span className="quotation-items-count">
+                {formData.items.length} Item{formData.items.length === 1 ? "" : "s"}
+              </span>
+            </div>
+
+            <div className="quotation-items-table">
+              <div className="quotation-table-header">
+                <span>Product Name</span>
+                <span>Price</span>
+                <span>Quantity</span>
+                <span>Total</span>
+                <span>Actions</span>
+              </div>
+
+              {formData.items.length ? (
+                formData.items.map((item, index) => (
+                  <div className="quotation-table-row" key={`${item.product_name}-${index}`}>
+                    <div className="quotation-item-label" data-label="Product Name">
+                      <span className="quotation-item-name">
+                        {item.product_name || "Untitled product"}
+                      </span>
+                    </div>
+
+                    <div className="quotation-item-value" data-label="Price">
+                      {formatCurrency(Number(item.price || 0))}
+                    </div>
+
+                    <div className="quotation-item-value" data-label="Quantity">
+                      {Number(item.quantity || 0)}
+                    </div>
+
+                    <div
+                      className="quotation-item-value quotation-item-total"
+                      data-label="Total"
+                    >
+                      {formatCurrency(
+                        Number(item.price || 0) * Number(item.quantity || 0)
+                      )}
+                    </div>
+
+                    <div className="quotation-row-actions quotation-table-action">
+                      <button
+                        type="button"
+                        className="edit-item-btn"
+                        onClick={() => startEditItem(index)}
+                        aria-label={`Edit ${item.product_name || "item"}`}
+                      >
+                        <FaEdit />
+                      </button>
+
+                      <button
+                        type="button"
+                        className="remove-item-btn"
+                        onClick={() => removeItem(index)}
+                        aria-label={`Remove ${item.product_name || "item"}`}
+                      >
+                        <FaTrash />
+                      </button>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="quotation-empty-state">No order items</div>
+              )}
             </div>
           </div>
 
@@ -400,7 +563,7 @@ const Quotation = () => {
 
             <div>
               <p>Total Amount</p>
-              <h3>₹{totalAmount}</h3>
+              <h3>{formatCurrency(totalAmount)}</h3>
             </div>
           </div>
 

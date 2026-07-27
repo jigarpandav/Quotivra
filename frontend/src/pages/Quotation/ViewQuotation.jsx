@@ -126,7 +126,11 @@ const ViewQuotation = () => {
   ]);
 
   useEffect(() => {
-    handleGetQuotations();
+    const timer = setTimeout(() => {
+      handleGetQuotations();
+    }, 0);
+
+    return () => clearTimeout(timer);
   }, [handleGetQuotations]);
 
   /* =========================
@@ -288,13 +292,13 @@ const ViewQuotation = () => {
 
               <div className="view-quotations-breadcrumb">
                 <Link to="/dashboard">Dashboard</Link>
-                <span aria-hidden="true">›</span>
+                <span aria-hidden="true">&gt;</span>
                 <p>Quotations</p>
               </div>
             </div>
 
             <Link
-              to="/add-quotation"
+              to="/quotations"
               className="view-quotations-add-btn"
             >
               <FaPlus />
