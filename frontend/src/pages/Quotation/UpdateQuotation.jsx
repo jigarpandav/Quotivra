@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import {
   FaUser,
   FaPhone,
@@ -39,6 +39,18 @@ const UpdateQuotation = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const admin_id = localStorage.getItem("admin_id");
+  const builderSectionRef = useRef(null);
+
+  const scrollToBuilderSection = () => {
+    if (!window.matchMedia("(max-width: 576px)").matches) return;
+
+    requestAnimationFrame(() => {
+      builderSectionRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    });
+  };
 
   const preserveScrollPosition = () => {
     const currentScrollY = window.scrollY;
@@ -248,6 +260,7 @@ const UpdateQuotation = () => {
     setEditingItemIndex(index);
     setError("");
     setFieldErrors({});
+    scrollToBuilderSection();
   };
 
   const removeItem = (index) => {
@@ -393,7 +406,10 @@ const UpdateQuotation = () => {
             </div>
           </div>
 
-          <div className="quotation-card card quotation-builder-card">
+          <div
+            className="quotation-card card quotation-builder-card"
+            ref={builderSectionRef}
+          >
             <div className="quotation-builder-header">
               <div>
                 <p className="quotation-step-label">Quotation Builder</p>
